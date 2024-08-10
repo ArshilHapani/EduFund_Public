@@ -5,6 +5,7 @@
     "deploy:hardhat": "hardhat run ./scripts/deploy.ts"
   },
   "devDependencies": {
+    "@chainlink/contracts": "^1.2.0",
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "hardhat": "^2.22.7",
     "ts-node": "^10.9.2",

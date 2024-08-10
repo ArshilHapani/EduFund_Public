@@ -21,6 +21,10 @@ const config: HardhatUserConfig = {
       url: `https://rpc.open-campus-codex.gelato.digital/`,
       accounts: [process.env.WALLET_PRIVATE_KEY!],
     },
+    arbitrum: {
+      url: process.env.ARBITRUM_JSON_RPC_URL,
+      accounts: [process.env.WALLET_PRIVATE_KEY!],
+    },
   },
 };
 

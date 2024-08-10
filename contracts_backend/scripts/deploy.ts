@@ -1,18 +1,17 @@
-import { ethers } from "hardhat";
+import { ethers, network } from "hardhat";
+
+import verifyContract from "../utils/verify";
 
 (async function () {
   const CounterFactory = await ethers.getContractFactory("Counter");
-  const counter = await CounterFactory.deploy();
+  const counter = await CounterFactory.deploy(180n);
   await counter.waitForDeployment();
 
-  console.log("Counter deployed to:", await counter.getAddress());
-  let counterValue = await counter.count();
-  console.log(`counter value ${counterValue}`);
-  // increment
-  await counter.increment();
-  counterValue = await counter.count();
-  console.log(`counter value after increment ${counterValue}`);
-  await counter.decrement();
-  counterValue = await counter.count();
-  console.log(`counter value after decrement ${counterValue}`);
+  let address = await counter.getAddress();
+  console.log("Counter deployed to:", address);
+
+  if (network.name === "arbitrum") {
+    console.log("Verifying contract on etherscan...");
+    await verifyContract(address, []);
+  }
 })();
