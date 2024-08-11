@@ -1,5 +1,9 @@
 {
   "name": "hardhat-project",
+  "scripts": {
+    "deploy:localhost": "hardhat run ./scripts/deploy.ts --network localhost",
+    "deploy:hardhat": "hardhat run ./scripts/deploy.ts"
+  },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "hardhat": "^2.22.7",
