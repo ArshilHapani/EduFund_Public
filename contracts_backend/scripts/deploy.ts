@@ -3,15 +3,19 @@ import { ethers, network } from "hardhat";
 import verifyContract from "../utils/verify";
 
 (async function () {
-  const CounterFactory = await ethers.getContractFactory("Counter");
-  const counter = await CounterFactory.deploy(180n);
-  await counter.waitForDeployment();
+  const EduFund = await ethers.getContractFactory("EduFund");
+  const eduFund = await EduFund.deploy();
+  await eduFund.waitForDeployment();
 
-  let address = await counter.getAddress();
-  console.log("Counter deployed to:", address);
+  const campaign = await eduFund.createCampaign(
+    "Title",
+    "Description",
+    1000,
+    // 1 hour from now
+    Math.floor(Date.now() / 1000) + 3600
+  );
+  const tx = await campaign.wait(1);
 
-  if (network.name === "arbitrum") {
-    console.log("Verifying contract on etherscan...");
-    await verifyContract(address, []);
-  }
+  const campaignId = (tx?.logs[0] as any).args[1];
+  console.log(campaignId);
 })();
