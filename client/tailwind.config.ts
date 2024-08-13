@@ -18,7 +18,15 @@ const config = {
       },
     },
     extend: {
+      fontFamily: {
+        epilogue: ["Epilogue", "sans-serif"],
+      },
       colors: {
+        primaryBlack: "#131318",
+        dockBlack: "#1c1c24",
+        dockIconHover: "#2c2f32",
+        primaryPurple: "#8c6dfd",
+        primaryGreen: "#4acd8d",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
