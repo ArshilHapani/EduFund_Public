@@ -1,15 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {console} from "hardhat/console.sol";
-
 import {EduFund__Errors} from "./Errors.sol";
 import {Events} from "./Events.sol";
 
 contract EduFund {
     enum Vote {
-        Yes,
-        No
+        No,
+        Yes
     }
 
     struct Campaign {
@@ -109,7 +107,7 @@ contract EduFund {
         if (block.timestamp > campaign.deadline) {
             revert EduFund__Errors.CampaignExpired();
         }
-        if (campaign.balance + msg.value >= campaign.goal) {
+        if (campaign.balance + msg.value > campaign.goal) {
             revert EduFund__Errors.CampaignGoalReached();
         }
         campaign.balance += msg.value;
@@ -144,12 +142,11 @@ contract EduFund {
                 0
             ) {
                 revert EduFund__Errors.RecipientCannotBeDonator();
+            } else {
+                s_campaignIdToTransactions[_campaignId].push(
+                    Transaction(_recipients[i], _amounts[i], _descriptions[i])
+                );
             }
-        }
-        for (uint256 i = 0; i < _recipients.length; i++) {
-            s_campaignIdToTransactions[_campaignId].push(
-                Transaction(_recipients[i], _amounts[i], _descriptions[i])
-            );
         }
         campaign.isTransactionProposed = true;
         campaign.active = false;
@@ -184,17 +181,15 @@ contract EduFund {
             s_campaignIdToVotes[_campaignId].length - 1,
             v == Vote.Yes
         );
-        if (
-            s_campaignIdToVotes[_campaignId].length ==
-            s_campaignIdToDonations[_campaignId].length
-        ) {
-            emit Events.FinalizingTransaction(_campaignId);
-            finalizeTransaction(_campaignId);
-        }
     }
 
-    function finalizeTransaction(uint256 _campaignId) internal {
+    function finalizeTransaction(
+        uint256 _campaignId
+    ) public onlyOwner(_campaignId) {
         Campaign storage campaign = s_campaigns[_campaignId];
+        if (!campaign.isTransactionProposed) {
+            revert EduFund__Errors.TransactionIsNotYetProposed();
+        }
         Transaction[] storage transactions = s_campaignIdToTransactions[
             _campaignId
         ];
@@ -208,8 +203,12 @@ contract EduFund {
                 noVotes++;
             }
         }
-        console.log("yesVotes: %d", yesVotes);
-        console.log("noVotes: %d", noVotes);
+        if (
+            (yesVotes == 0 && noVotes == 0) ||
+            yesVotes + noVotes != votes.length
+        ) {
+            revert EduFund__Errors.InsufficientVotes();
+        }
         if (yesVotes > noVotes) {
             for (uint256 i = 0; i < transactions.length; i++) {
                 (bool success, ) = transactions[i].recipient.call{
@@ -241,6 +240,7 @@ contract EduFund {
                 }
             }
         }
+        campaign.isTransactionExecuted = true;
     }
 
     function makeCampaignInactive(
