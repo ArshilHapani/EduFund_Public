@@ -17,4 +17,5 @@ library EduFund__Errors {
     error TransactionIsNotYetProposed();
     error CampaignAlreadyVoted();
     error RecipientCannotBeDonator();
+    error InsufficientVotes();
 }

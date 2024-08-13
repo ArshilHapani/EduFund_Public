@@ -4,8 +4,11 @@ import { expect } from "chai";
 import { EduFund } from "../typechain-types";
 
 type CampaignType = Awaited<ReturnType<EduFund["createCampaign"]>>;
-
 type Signers = Awaited<ReturnType<typeof ethers.getSigners>>;
+enum Vote {
+  YES = 1,
+  NO = 0,
+}
 
 const DUMMY_CAMPAIGN = {
   title: "Test Campaign",
@@ -263,92 +266,191 @@ describe("EduFund", function () {
       signers = await ethers.getSigners();
       ({ campaignId } = await getCampaignAndCampaignId(eduFund));
     });
-
-    it("It should revert if someone tries to vote who is not donator", async function () {
-      await donateCampaign(eduFund, signers, campaignId);
-      await expect(eduFund.vote(campaignId, 0)).to.be.revertedWithCustomError(
-        { interface: _interface },
-        "OnlyDonatorsCanVote"
-      );
-    });
-
-    it("It only allows voting if transaction campaign is proposed", async function () {
-      await donateCampaign(eduFund, signers, campaignId);
-      await proposeTransaction(eduFund, signers, campaignId);
-    });
-
-    it("It should updates the `s_campaignIdToVotes` mapping", async function () {
-      await donateCampaign(eduFund, signers, campaignId);
-      await proposeTransaction(eduFund, signers, campaignId);
-
-      await eduFund.connect(signers[4]).vote(campaignId, 1);
-      const vote = await eduFund.s_campaignIdToVotes(campaignId, 0);
-
-      expect(vote.voter).to.equal(signers[4].address);
-      expect(vote.vote).to.equal(1);
-    });
-
-    it("It should not allow to vote more than once", async function () {
-      await donateCampaign(eduFund, signers, campaignId);
-      await proposeTransaction(eduFund, signers, campaignId);
-
-      await eduFund.connect(signers[4]).vote(campaignId, 1);
-      await expect(
-        eduFund.connect(signers[4]).vote(campaignId, 1)
-      ).to.be.revertedWithCustomError(
-        { interface: _interface },
-        "CampaignAlreadyVoted"
-      );
-    });
-
-    it("It should not allow recipient to be donor", async function () {
-      await donateCampaign(eduFund, signers, campaignId);
-      await expect(
-        eduFund.proposeTransactions(
-          campaignId,
-          [signers[4].address, signers[4].address],
-          [parseUnits(0.1), parseUnits(0.1)],
-          ["For anime manga", "For anime manga"]
-        )
-      ).to.be.revertedWithCustomError(
-        { interface: _interface },
-        "RecipientCannotBeDonator"
-      );
-    });
-
-    it(`It should emit an event`, async function () {
-      await donateCampaign(eduFund, signers, campaignId);
-      await proposeTransaction(eduFund, signers, campaignId);
-      expect(eduFund.connect(signers[4]).vote(campaignId, 1)).to.be.emit(
-        eduFund,
-        "CampaignVoted"
-      );
-    });
-
-    describe("Finalize function", function () {
-      it("It should invoke `finalizeTransaction` method once all donators have vote for their opinion", async function () {
+    describe("Input validation", function () {
+      it("It should revert if someone tries to vote who is not donator", async function () {
         await donateCampaign(eduFund, signers, campaignId);
-        await proposeTransaction(eduFund, signers, campaignId);
-        await voteCampaign(eduFund, signers, campaignId, 16);
-
-        await expect(
-          eduFund.connect(signers[17]).vote(campaignId, 0)
-        ).to.be.emit(eduFund, "FinalizingTransaction");
+        await expect(eduFund.vote(campaignId, 0)).to.be.revertedWithCustomError(
+          { interface: _interface },
+          "OnlyDonatorsCanVote"
+        );
       });
 
-      it("It should transfer the amount to the recipient if majority donators have voted for yes", async function () {
+      it("It only allows voting if transaction campaign is proposed", async function () {
         await donateCampaign(eduFund, signers, campaignId);
         await proposeTransaction(eduFund, signers, campaignId);
-        const balanceBefore = await ethers.provider.getBalance(
-          signers[18].address
+      });
+
+      it("It should not allow to vote more than once", async function () {
+        await donateCampaign(eduFund, signers, campaignId);
+        await proposeTransaction(eduFund, signers, campaignId);
+
+        await eduFund.connect(signers[4]).vote(campaignId, 1);
+        await expect(
+          eduFund.connect(signers[4]).vote(campaignId, 1)
+        ).to.be.revertedWithCustomError(
+          { interface: _interface },
+          "CampaignAlreadyVoted"
         );
+      });
+
+      it("It should not allow recipient to be donor", async function () {
+        await donateCampaign(eduFund, signers, campaignId);
+        await expect(
+          eduFund.proposeTransactions(
+            campaignId,
+            [signers[4].address, signers[4].address],
+            [parseUnits(0.1), parseUnits(0.1)],
+            ["For anime manga", "For anime manga"]
+          )
+        ).to.be.revertedWithCustomError(
+          { interface: _interface },
+          "RecipientCannotBeDonator"
+        );
+      });
+    });
+    describe("Mutation validation", function () {
+      it("It should updates the `s_campaignIdToVotes` mapping", async function () {
+        await donateCampaign(eduFund, signers, campaignId);
+        await proposeTransaction(eduFund, signers, campaignId);
+
+        await eduFund.connect(signers[4]).vote(campaignId, 1);
+        const vote = await eduFund.s_campaignIdToVotes(campaignId, 0);
+
+        expect(vote.voter).to.equal(signers[4].address);
+        expect(vote.vote).to.equal(1);
+      });
+
+      it(`It should emit an event`, async function () {
+        await donateCampaign(eduFund, signers, campaignId);
+        await proposeTransaction(eduFund, signers, campaignId);
+        expect(eduFund.connect(signers[4]).vote(campaignId, 1)).to.be.emit(
+          eduFund,
+          "CampaignVoted"
+        );
+      });
+    });
+  });
+
+  describe("`Finalize function", function () {
+    let campaignId: number;
+    let signers: Signers;
+    let campaign: CampaignType;
+    beforeEach(async function () {
+      ({ campaign, campaignId } = await getCampaignAndCampaignId(eduFund));
+      signers = await ethers.getSigners();
+    });
+
+    describe("Input validation", function () {
+      it("It should only allow owner to finalize the campaign", async function () {
+        await donateCampaign(eduFund, signers, campaignId);
+        await proposeTransaction(eduFund, signers, campaignId);
         await voteCampaign(eduFund, signers, campaignId);
+        await expect(
+          eduFund.connect(signers[1]).finalizeTransaction(campaignId)
+        ).to.be.revertedWithCustomError(
+          { interface: _interface },
+          "InvalidCampaignOwner"
+        );
+      });
 
-        const balanceAfter = await ethers.provider.getBalance(
-          signers[18].address
+      it("It should only allow to finalize the campaign if the transaction is proposed", async function () {
+        await donateCampaign(eduFund, signers, campaignId);
+        await expect(
+          eduFund.finalizeTransaction(campaignId)
+        ).to.be.revertedWithCustomError(
+          { interface: _interface },
+          "TransactionIsNotYetProposed"
+        );
+      });
+      it("It should only allow to finalize the transaction if it contain enough votes", async function () {
+        await donateCampaign(eduFund, signers, campaignId);
+        await proposeTransaction(eduFund, signers, campaignId);
+        await expect(
+          eduFund.finalizeTransaction(campaignId)
+        ).to.be.revertedWithCustomError(
+          { interface: _interface },
+          "InsufficientVotes"
+        );
+      });
+    });
+
+    describe("Mutation validation and fund transfer validation", function () {
+      let campaignId: number;
+      let eduFund: EduFund;
+
+      beforeEach(async function () {
+        const EduFund = await ethers.getContractFactory("EduFund");
+        eduFund = await EduFund.deploy();
+        await eduFund.waitForDeployment();
+        ({ campaignId, campaign } = await getCampaignAndCampaignId(eduFund));
+      });
+      it("It should transfer the funds to the recipient if majority votes are in favor", async function () {
+        const numberOfDonator = 10; // threshold (more donators lead to gas limit error)
+        await donateCampaign(eduFund, signers, campaignId, numberOfDonator);
+        await proposeTransaction(eduFund, signers, campaignId);
+        await voteCampaign(
+          eduFund,
+          signers,
+          campaignId,
+          numberOfDonator,
+          Vote.YES
+        );
+        const beforeBalances = await getRecipientBalance();
+        await eduFund.finalizeTransaction(campaignId);
+        const afterBalances = await getRecipientBalance();
+
+        beforeBalances.forEach((balance, idx) => {
+          expect(afterBalances[idx]).to.be.gt(balance);
+        });
+      });
+
+      it("It should transfer funds back to the donators if majority votes are against", async function () {
+        const numOfDonors = 2;
+        const [beforeBalance1, beforeBalance2] = await getDonatorsBalance(
+          numOfDonors
+        );
+        const [ug11, ug12] = await donateCampaign(
+          eduFund,
+          signers,
+          campaignId,
+          2,
+          DUMMY_CAMPAIGN.targetAmount
+        );
+        await proposeTransaction(eduFund, signers, campaignId);
+        const [ug21, ug22] = await voteCampaign(
+          eduFund,
+          signers,
+          campaignId,
+          numOfDonors,
+          Vote.NO
+        );
+        const [br1, br2] = await getRecipientBalance();
+        await eduFund.finalizeTransaction(campaignId);
+        const [ar1, ar2] = await getRecipientBalance();
+        const [afterBalance1, afterBalance2] = await getDonatorsBalance(
+          numOfDonors
         );
 
-        expect(balanceAfter).to.be.gt(balanceBefore);
+        expect(afterBalance1 + ug11 + ug21).to.be.lte(beforeBalance1);
+        expect(afterBalance2 + ug12 + ug22).to.be.lte(beforeBalance2);
+        expect(br1).to.be.equal(ar1);
+        expect(br2).to.be.equal(ar2);
+      });
+
+      it("It should update the `isTransactionExecuted` flag to true after finalizing transaction", async function () {
+        const numberOfDonator = 2;
+        await donateCampaign(eduFund, signers, campaignId, numberOfDonator);
+        await proposeTransaction(eduFund, signers, campaignId);
+        await voteCampaign(
+          eduFund,
+          signers,
+          campaignId,
+          numberOfDonator,
+          Vote.YES
+        );
+        await eduFund.finalizeTransaction(campaignId);
+        const campaign = await eduFund.s_campaigns(campaignId);
+        expect(campaign.isTransactionExecuted).to.be.true;
       });
     });
   });
@@ -492,24 +594,35 @@ async function donateCampaign(
   eduFund: EduFund,
   signers: Signers,
   campaignId: number,
-  numDonors = 17
+  numDonors = 17,
+  goal = DUMMY_CAMPAIGN.targetAmount
 ) {
+  const amountToDonate = goal / numDonors;
+  const usedGas: bigint[] = [];
   for (let i = 1; i <= numDonors; i++) {
-    await eduFund
+    const tx = await eduFund
       .connect(signers[i])
-      .donate(campaignId, { value: parseUnits(0.1) });
+      .donate(campaignId, { value: parseUnits(amountToDonate) });
+    const receipt = await tx.wait();
+    usedGas.push(receipt?.gasUsed ?? 0n);
   }
+  return usedGas;
 }
 
 async function voteCampaign(
   eduFund: EduFund,
   signers: Signers,
   campaignId: number,
-  numDonors = 17
+  numDonors = 17,
+  vote = 1
 ) {
+  const usedGas: bigint[] = [];
   for (let i = 1; i <= numDonors; i++) {
-    await eduFund.connect(signers[i]).vote(campaignId, 1);
+    const tx = await eduFund.connect(signers[i]).vote(campaignId, vote);
+    const receipt = await tx.wait();
+    usedGas.push(receipt?.gasUsed ?? 0n);
   }
+  return usedGas;
 }
 
 async function proposeTransaction(
@@ -520,7 +633,29 @@ async function proposeTransaction(
   await eduFund.proposeTransactions(
     campaignId,
     [signers[18].address, signers[19].address],
-    [parseUnits(0.1), parseUnits(0.1)],
+    [parseUnits(1), parseUnits(1)],
     ["For anime manga", "For anime manga"]
   );
+}
+
+async function getDonatorsBalance(n: number, showLog: boolean = false) {
+  const signers = await ethers.getSigners();
+  const balance = [];
+  for (let i = 1; i <= n; i++) {
+    balance.push(await ethers.provider.getBalance(signers[i].address));
+  }
+  const parsedBalance: string[] = [];
+  balance.forEach((b) => parsedBalance.push(parseWei(b)));
+  showLog && console.log(parsedBalance);
+  return balance;
+}
+async function getRecipientBalance(showLog: boolean = false) {
+  const signers = await ethers.getSigners();
+  const [r1, r2] = await Promise.all([
+    await ethers.provider.getBalance(signers[18]),
+    await ethers.provider.getBalance(signers[19]),
+  ]);
+
+  showLog && console.log(parseWei(r1), parseWei(r2));
+  return [r1, r2];
 }
