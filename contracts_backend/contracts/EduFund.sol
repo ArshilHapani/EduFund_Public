@@ -38,7 +38,7 @@ contract EduFund {
         string description;
     }
 
-    Campaign[] public s_campaigns;
+    Campaign[] s_campaigns;
 
     mapping(uint256 => Donation[]) public s_campaignIdToDonations;
     mapping(uint256 => Transaction[]) public s_campaignIdToTransactions;
@@ -248,6 +248,10 @@ contract EduFund {
     ) public onlyOwner(_campaignId) {
         s_campaigns[_campaignId].active = false;
         emit Events.CampaignMadeInactive(_campaignId);
+    }
+
+    function getCampaigns() public view returns (Campaign[] memory) {
+        return s_campaigns;
     }
 
     function calculatePercentageAmount(

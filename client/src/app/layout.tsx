@@ -4,6 +4,9 @@ import { Inter } from "next/font/google";
 import ContextProvider from "@/components/Provider";
 import Navbar from "@/components/Navbar";
 import Dock from "@/components/Dock";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { Toaster } from "@/components/ui/toaster";
+import Loader from "@/components/Loader";
 
 import { cn } from "@/lib/utils";
 
@@ -23,18 +26,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
           "bg-primaryBlack text-white font-epilogue sm:p-8 p-4 container",
           inter.className
         )}
       >
-        <ContextProvider>
-          <Navbar />
-          <Dock />
-          {children}
-        </ContextProvider>
+        <ThemeProvider defaultTheme="dark">
+          <ContextProvider>
+            <Navbar />
+            <Dock />
+            {children}
+            <Toaster />
+            <Loader />
+          </ContextProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

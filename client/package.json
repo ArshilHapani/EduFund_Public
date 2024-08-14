@@ -10,7 +10,10 @@
     "dev:turbo": "next dev --turbo"
   },
   "dependencies": {
+    "@dicebear/collection": "^9.2.1",
+    "@dicebear/core": "^9.2.1",
     "@radix-ui/react-slot": "^1.1.0",
+    "@radix-ui/react-toast": "^1.2.1",
     "@radix-ui/react-tooltip": "^1.1.2",
     "@thirdweb-dev/react": "^4.9.4",
     "@thirdweb-dev/sdk": "^4.0.99",
@@ -19,8 +22,10 @@
     "ethers": "^5.7.2",
     "lucide-react": "^0.427.0",
     "next": "14.2.5",
+    "next-themes": "^0.3.0",
     "react": "^18",
     "react-dom": "^18",
+    "react-hook-form": "^7.52.2",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
     "zustand": "^4.5.4"

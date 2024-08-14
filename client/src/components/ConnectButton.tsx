@@ -3,10 +3,8 @@
 import { ConnectWallet } from "@thirdweb-dev/react";
 
 import { cn } from "@/lib/utils";
-import useContract from "@/hooks/useContract";
 
 const ConnectButton = ({ className }: { className?: string }) => {
-  const { setContract } = useContract();
   return (
     <ConnectWallet
       className={cn(className)}
@@ -22,7 +20,6 @@ const ConnectButton = ({ className }: { className?: string }) => {
         subtitle: "The place where you rise",
       }}
       auth={{ loginOptional: true }}
-      onConnect={async (wallet) => setContract(await wallet.getSigner())}
       theme="dark"
       showThirdwebBranding={false}
       style={{

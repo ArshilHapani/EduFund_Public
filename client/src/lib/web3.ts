@@ -1,6 +1,6 @@
-import { BigNumber, Contract, Signer, ethers } from "ethers";
+import { Contract, Signer, ethers } from "ethers";
 
-import { opencampus, localhost } from "./addresses.json";
+import addresses from "./addresses.json";
 import abi from "./abi.json";
 
 export default class EduFundClient {
@@ -10,8 +10,12 @@ export default class EduFundClient {
 
   constructor(signer: Signer | undefined) {
     this.signer = signer;
-    this.contractAddress = localhost.EduFund;
-    this.contract = new ethers.Contract(localhost.EduFund, abi.abi, signer);
+    this.contractAddress = addresses.opencampus.EduFund;
+    this.contract = new ethers.Contract(
+      addresses.opencampus.EduFund,
+      abi.EduFund,
+      signer
+    );
   }
   getContract(): Contract {
     return this.contract;
@@ -22,11 +26,23 @@ export default class EduFundClient {
     goal: number,
     deadline: number
   ): Promise<void> {
-    await this.contract.createCampaign(
-      title,
-      description,
-      ethers.utils.parseEther(goal.toString()),
-      BigNumber.from(deadline)
-    );
+    try {
+      await this.contract.createCampaign(
+        title,
+        description,
+        ethers.utils.parseEther(goal.toString()),
+        deadline
+      );
+    } catch (e: any) {
+      throw new Error(e);
+    }
+  }
+
+  async getCampaigns() {
+    try {
+      return await this.contract.getCampaigns();
+    } catch (e: any) {
+      throw new Error(e);
+    }
   }
 }

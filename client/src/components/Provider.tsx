@@ -3,8 +3,6 @@
 import { useEffect, useState } from "react";
 import { ThirdwebProvider } from "@thirdweb-dev/react";
 
-import ConnectContract from "./ConnectContract";
-
 type Props = {
   children: React.ReactNode;
 };
@@ -20,7 +18,6 @@ const ContextProvider = ({ children }: Props) => {
       theme="light"
       clientId={process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID}
     >
-      <ConnectContract />
       {children}
     </ThirdwebProvider>
   );

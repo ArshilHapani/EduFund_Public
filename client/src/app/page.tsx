@@ -1,42 +1,32 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import { useContract, useChainId } from "@thirdweb-dev/react";
+import { useEffect, useState } from "react";
+import { useThirdwebConnectedWalletContext } from "@thirdweb-dev/react";
+
 import useContractV1 from "@/hooks/useContract";
-import addresses from "@/lib/addresses.json";
-import { Button } from "@/components/ui/button";
+import { Campaign } from "@/lib/types";
+import { transformDataToCampaign } from "@/lib/utils";
+import CampaignWrapper from "@/components/CampaignWrapper";
 
 export default function Home() {
-  const { contract, isLoading, error, isError } = useContract(
-    addresses.localhost.EduFund,
-    "custom"
-  );
-  const chainId = useChainId();
-  const { eduFundClient } = useContractV1();
-  console.log(eduFundClient?.getContract());
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const { signer } = useThirdwebConnectedWalletContext();
+  const eduFund = useContractV1();
+  useEffect(() => {
+    (async function () {
+      if (!eduFund || !signer) return;
+      const campaigns = await eduFund.getCampaigns();
+      setCampaigns(transformDataToCampaign(campaigns));
+    })();
+  }, [signer, eduFund]);
+
   return (
     <main className="bg-primaryBlack">
-      <h1>arshil</h1>
-      {isLoading ? (
-        <p>Loading...</p>
-      ) : (
-        <div>
-          <h2>Contract Address: {contract?.getAddress()}</h2>
-          <h2>
-            Contract Balance: <br /> <pre>{JSON.stringify(contract?.abi)}</pre>
-          </h2>
-        </div>
-      )}
-      {isError && <pre>{JSON.stringify(error)}</pre>}
-
-      <h1>{chainId}</h1>
-      <Button
-        variant="outline"
-        onClick={() =>
-          eduFundClient?.createCampaign("Temp", "Temp", 2, Date.now() + 3600)
-        }
-      >
-        Click me
-      </Button>
+      <CampaignWrapper
+        title="Active Campaigns"
+        campaigns={campaigns.filter((campaign) => campaign.active)}
+      />
     </main>
   );
 }
