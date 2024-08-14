@@ -1,18 +1,14 @@
-import { Contract, Signer, ethers } from "ethers";
+import { BigNumberish, Contract, Signer, ethers } from "ethers";
 
 import addresses from "./addresses.json";
 import abi from "./abi.json";
 
 export default class EduFundClient {
-  private signer: Signer | undefined = undefined;
-  private contractAddress: string;
   private contract: Contract;
 
   constructor(signer: Signer | undefined) {
-    this.signer = signer;
-    this.contractAddress = addresses.opencampus.EduFund;
     this.contract = new ethers.Contract(
-      addresses.opencampus.EduFund,
+      addresses.localhost.EduFund,
       abi.EduFund,
       signer
     );
@@ -41,6 +37,57 @@ export default class EduFundClient {
   async getCampaigns() {
     try {
       return await this.contract.getCampaigns();
+    } catch (e: any) {
+      throw new Error(e);
+    }
+  }
+
+  async getCampaignById(id: string) {
+    try {
+      return await this.contract.s_campaigns(id);
+    } catch (e: any) {
+      throw new Error(e);
+    }
+  }
+  async getDonationsByCampaignId(id: string) {
+    try {
+      return await this.contract.getCampaignDonators(id);
+    } catch (e: any) {
+      throw new Error(e);
+    }
+  }
+
+  async donate(id: string, amount: number) {
+    try {
+      await this.contract.donate(id, {
+        value: ethers.utils.parseEther(amount.toString()),
+      });
+    } catch (e: any) {
+      throw new Error(e);
+    }
+  }
+
+  async proposeTransaction(
+    campaignId: BigNumberish,
+    recipients: string[],
+    amounts: string[],
+    descriptions: string[]
+  ) {
+    try {
+      await this.contract.proposeTransactions(
+        campaignId,
+        recipients,
+        amounts.map((a) => ethers.utils.parseEther(a.toString())),
+        descriptions
+      );
+    } catch (e: any) {
+      throw new Error(e);
+    }
+  }
+
+  async getAllDonations() {
+    try {
+      return await this.contract.getDonatorDonationsForAllCampaigns();
     } catch (e: any) {
       throw new Error(e);
     }

@@ -2,10 +2,12 @@
 
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import { useSigner } from "@thirdweb-dev/react";
 
 import CustomButton from "@/components/CustomButton";
 import TextField from "@/components/TextField";
 import { useToast } from "@/components/ui/use-toast";
+import EmptyState from "@/components/EmptyState";
 
 import useCustomContract from "@/hooks/useContract";
 import useLoader from "@/hooks/useLoader";
@@ -34,9 +36,26 @@ const AddCampaign = () => {
   const { setLoading } = useLoader();
   const eduFundClient = useCustomContract();
   const { toast } = useToast();
+  const signer = useSigner();
   const router = useRouter();
 
   function onSubmit({ deadline, description, goal, title }: FormSchema) {
+    if (goal <= 0) {
+      toast({
+        title: "Error",
+        description: "Goal should be greater than 0",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (new Date(deadline) < new Date()) {
+      toast({
+        title: "Error",
+        description: "Deadline should be greater than current date",
+        variant: "destructive",
+      });
+      return;
+    }
     setLoading(true, "Creating campaign...");
     const deadlineTimestamp = new Date(deadline).getTime() / 1000;
     eduFundClient
@@ -59,6 +78,13 @@ const AddCampaign = () => {
       })
       .finally(() => setLoading(false));
   }
+  if (!signer)
+    return (
+      <EmptyState
+        title="Connect your wallet to create a campaign"
+        subtitle="You need to connect your wallet to create a campaign"
+      />
+    );
   return (
     <div className="bg-[#1c1c24] flex justify-center mb-10 items-center flex-col  rounded-[10px] sm:p-10 p-4">
       <div className="flex justify-center items-center p-[16px] sm:min-w-[380px] bg-[#3a3a43] rounded-[10px]">

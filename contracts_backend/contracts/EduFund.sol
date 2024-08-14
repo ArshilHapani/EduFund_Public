@@ -38,7 +38,7 @@ contract EduFund {
         string description;
     }
 
-    Campaign[] s_campaigns;
+    Campaign[] public s_campaigns;
 
     mapping(uint256 => Donation[]) public s_campaignIdToDonations;
     mapping(uint256 => Transaction[]) public s_campaignIdToTransactions;
@@ -252,6 +252,24 @@ contract EduFund {
 
     function getCampaigns() public view returns (Campaign[] memory) {
         return s_campaigns;
+    }
+
+    function getCampaignDonators(
+        uint256 _campaignId
+    ) public view returns (Donation[] memory) {
+        return s_campaignIdToDonations[_campaignId];
+    }
+
+    function getDonatorDonationsForAllCampaigns()
+        public
+        view
+        returns (Donation[][] memory)
+    {
+        Donation[][] memory donations = new Donation[][](s_campaigns.length);
+        for (uint256 i = 0; i < s_campaigns.length; i++) {
+            donations[i] = s_campaignIdToDonations[i];
+        }
+        return donations;
     }
 
     function calculatePercentageAmount(

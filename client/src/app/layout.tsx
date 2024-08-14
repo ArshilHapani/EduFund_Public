@@ -29,19 +29,19 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          "bg-primaryBlack text-white font-epilogue sm:p-8 p-4 container",
+          "bg-primaryBlack text-white font-epilogue sm:p-8 p-4 container mb-20",
           inter.className
         )}
       >
-        <ThemeProvider defaultTheme="dark">
-          <ContextProvider>
+        <ContextProvider>
+          <ThemeProvider defaultTheme="dark">
             <Navbar />
             <Dock />
             {children}
             <Toaster />
             <Loader />
-          </ContextProvider>
-        </ThemeProvider>
+          </ThemeProvider>
+        </ContextProvider>
       </body>
     </html>
   );

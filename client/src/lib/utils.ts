@@ -46,6 +46,61 @@ export function getRandomAvatar() {
   //@ts-ignore
   return createAvatar(AVATARS[randomIndex], {
     size: 128,
-    // ... other options
+    seed: Math.random().toString(),
   }).toDataUri();
 }
+
+export async function getRandomImageFromUnsplash() {
+  const FALLBACK_IMAGE =
+    "https://imgs.search.brave.com/rXr-KhcwB2hKwgiLCrUXJc6GZiHDJTN52rsNX0BKOjw/rs:fit:1200:1200:1/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJjYXZlLmNv/bS93cC9lamw3Y1N1/LmpwZw";
+  try {
+    const queries = [
+      "crypto",
+      "blockchain",
+      "ethereum",
+      "decentralized",
+      "nature",
+      "food",
+      "animal",
+      "technology",
+      "art",
+    ];
+
+    const randomQuery = queries[Math.floor(Math.random() * queries.length)];
+    // cache the response for 10 minutes
+    if (
+      localStorage?.getItem("LastTimeFetchedImage") ||
+      Date.now() < Date.now() - 600000
+    ) {
+      localStorage.removeItem("LastFetchedImage");
+    }
+    localStorage.setItem("LastTimeFetchedImage", Date.now().toString());
+    if (localStorage.getItem("LastFetchedImage")) {
+      return localStorage.getItem("LastFetchedImage");
+    }
+    const response = await fetch(
+      `https://api.unsplash.com/photos/random?query=${randomQuery}`,
+      {
+        headers: {
+          Authorization: `Client-ID ${process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      return FALLBACK_IMAGE;
+    }
+
+    const data = await response.json();
+    localStorage.setItem("LastFetchedImage", data.urls.regular);
+    return data.urls.regular;
+  } catch (error) {
+    console.error("Error fetching random image:", error);
+    return FALLBACK_IMAGE;
+  }
+}
+
+export const calculateBarPercentage = (goal: number, raisedAmount: number) => {
+  const percentage = Math.round((raisedAmount * 100) / goal);
+  return percentage;
+};

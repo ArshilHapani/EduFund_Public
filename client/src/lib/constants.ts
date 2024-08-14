@@ -1,4 +1,4 @@
-import { Blocks, HandCoins, Radio, User } from "lucide-react";
+import { Blocks, HandCoins, PackageOpen, Radio, User } from "lucide-react";
 
 import {
   lorelei,
@@ -53,6 +53,11 @@ export const DOCK_ITEMS = [
     title: "My donations",
     icon: HandCoins,
     href: "/my-donations",
+  },
+  {
+    title: "Proposed transaction",
+    icon: PackageOpen,
+    href: "/proposed-transaction",
   },
 ];
 export const AVATARS = [

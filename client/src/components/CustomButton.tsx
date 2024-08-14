@@ -18,10 +18,10 @@ const CustomButton = ({
     <button
       type={btnType}
       className={cn(
-        styles,
-        "font-epilogue font-semibold bg-primaryPurple text-[16px] leading-[26px] text-white min-h-[52px] px-4 rounded-[10px]"
+        "font-epilogue cursor-pointer font-semibold bg-primaryPurple text-[16px] leading-[26px] text-white min-h-[52px] px-4 rounded-[10px]",
+        styles
       )}
-      onClick={handleClick}
+      onClick={handleClick ? handleClick : () => {}}
     >
       {title}
     </button>

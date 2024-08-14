@@ -9,7 +9,7 @@ const Loader = () => {
     // it shows fading animation when enters and exits
     <div
       className={cn(
-        "fixed top-0 left-0 z-50 w-screen transition-all duration-300 backdrop-blur-md h-screen bg-black bg-opacity-50 flex justify-center items-center",
+        "fixed top-0 left-0 z-[100] w-screen transition-all duration-300 backdrop-blur-md h-screen bg-black bg-opacity-50 flex justify-center items-center",
         {
           "opacity-0 pointer-events-none hidden": !loading,
           "opacity-100 pointer-events-auto": loading,
@@ -20,7 +20,7 @@ const Loader = () => {
         <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-primaryPurple"></div>
         {/* label */}
         {label && (
-          <p className="font-epilogue font-semibold text-white text-[18px] mt-4">
+          <p className="font-epilogue font-semibold text-white text-[18px] mt-6">
             {label}
           </p>
         )}
