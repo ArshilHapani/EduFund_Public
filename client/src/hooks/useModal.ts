@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-type ModalType = `propose-transaction-${string}`;
+type ModalType = `propose-transaction-${string}` | `view-votes-${string}`;
 
 interface ModalState {
   type: ModalType | null;

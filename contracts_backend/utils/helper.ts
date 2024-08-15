@@ -38,7 +38,7 @@ export const DUMMY_CAMPAIGN = {
   // 1 hour from now
   //   deadline: Math.floor(Date.now() / 1000) + 3600,
   // 2 hour
-  deadline: Math.floor(Date.now() / 1000) + 3600 * 2,
+  deadline: Math.floor(Date.now() / 1000) + 3600 * 24 * 10,
 };
 export const NEGATIVE_DEADLINE = Math.floor(Date.now() / 1000) - 3600;
 
@@ -62,7 +62,7 @@ export async function getCampaignAndCampaignId(eduFund: EduFund) {
     parseUnits(DUMMY_CAMPAIGN.targetAmount),
     DUMMY_CAMPAIGN.deadline
   );
-  const tx = await campaign.wait();
+  const tx = await campaign.wait(1);
   const campaignId = (tx?.logs[0] as any).args[1];
 
   return {

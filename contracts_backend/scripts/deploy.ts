@@ -16,6 +16,14 @@ import verifyContract from "../utils/verify";
   console.log(`Network: ${networkName}`);
   console.log(`EduFund deployed to: ${eduFundAddress}`);
 
+  if (network.name === "sepolia" || network.name === "opencampus") {
+    await verifyContract(await eduFund.getAddress(), []);
+  }
+
+  await storeContractAddressAndABI(eduFundAddress);
+})();
+
+export async function storeContractAddressAndABI(address: string) {
   const addressesFilePath = path.resolve(
     __dirname,
     "../../client/src/lib/addresses.json"
@@ -28,13 +36,9 @@ import verifyContract from "../utils/verify";
     addresses = JSON.parse(fs.readFileSync(addressesFilePath, "utf8"));
   }
 
-  if (network.name === "sepolia" || network.name === "opencampus") {
-    await verifyContract(await eduFund.getAddress(), []);
-  }
-
-  addresses[networkName] = {
-    ...addresses[networkName],
-    EduFund: eduFundAddress,
+  addresses[network.name] = {
+    ...addresses[network.name],
+    EduFund: address,
   };
 
   fs.writeFileSync(addressesFilePath, JSON.stringify(addresses, null, 2));
@@ -55,4 +59,4 @@ import verifyContract from "../utils/verify";
   abiWriteStream.on("error", (err) => {
     console.error("Error writing ABI to file:", err);
   });
-})();
+}

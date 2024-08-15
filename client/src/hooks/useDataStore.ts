@@ -1,22 +1,23 @@
 import { create } from "zustand";
 
 import { Campaign } from "@/lib/types";
+import { DonationType } from "@/app/my-donations/page";
 
 interface DataStore {
   campaigns: Campaign[];
   setCampaigns: (campaigns: Campaign[]) => void;
-  donatedCampaignsIds: string[];
-  setDonatedCampaignsIds: (campaigns: string[]) => void;
+  donatedCampaigns: DonationType;
+  setDonatedCampaigns: (campaigns: DonationType) => void;
 }
 
 const useDataStore = create<DataStore>((set) => ({
   campaigns: [],
-  donatedCampaignsIds: [],
+  donatedCampaigns: [],
   setCampaigns(campaigns) {
     set({ campaigns });
   },
-  setDonatedCampaignsIds(donatedCampaignsIds) {
-    set({ donatedCampaignsIds });
+  setDonatedCampaigns(donatedCampaigns) {
+    set({ donatedCampaigns });
   },
 }));
 

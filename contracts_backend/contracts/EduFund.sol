@@ -196,6 +196,8 @@ contract EduFund {
         );
     }
 
+    //////////////////// Getters Functions ////////////////////
+
     function finalizeTransaction(
         uint256 _campaignId
     ) public onlyOwner(_campaignId) {
@@ -264,6 +266,72 @@ contract EduFund {
         uint256 _campaignId
     ) public view returns (Donation[] memory) {
         return s_campaignIdToDonations[_campaignId];
+    }
+
+    function getVoters(
+        uint256 _campaignId
+    ) public view returns (VoteStruct[] memory) {
+        return s_campaignIdToVotes[_campaignId];
+    }
+
+    function getProposalTransactions(
+        uint256 _campaignId
+    ) public view returns (Transaction[] memory) {
+        return s_campaignIdToTransactions[_campaignId];
+    }
+
+    function getVotedCampaigns() public view returns (Campaign[] memory) {
+        Campaign[] memory votedCampaigns = new Campaign[](s_campaigns.length);
+        uint256 j = 0;
+        for (uint256 i = 0; i < s_campaigns.length; i++) {
+            if (s_campaignIdToVoterToHasVoted[s_campaigns[i].id][msg.sender]) {
+                votedCampaigns[j] = s_campaigns[i];
+                j++;
+            }
+        }
+        return votedCampaigns;
+    }
+
+    function getFinalizedCampaigns() public view returns (Campaign[] memory) {
+        Campaign[] memory finalizedCampaigns = new Campaign[](
+            s_campaigns.length
+        );
+        uint256 j = 0;
+        for (uint256 i = 0; i < s_campaigns.length; i++) {
+            if (s_campaigns[i].isTransactionExecuted) {
+                finalizedCampaigns[j] = s_campaigns[i];
+                j++;
+            }
+        }
+        return finalizedCampaigns;
+    }
+
+    function getTransactionReadyCampaigns()
+        public
+        view
+        returns (Campaign[] memory)
+    {
+        Campaign[] memory readyToFinalizeCampaigns = new Campaign[](
+            s_campaigns.length
+        );
+        uint256 j = 0;
+        for (uint256 i = 0; i < s_campaigns.length; i++) {
+            if (
+                s_campaigns[i].owner == msg.sender &&
+                s_campaigns[i].isTransactionProposed &&
+                !s_campaigns[i].isTransactionExecuted
+            ) {
+                if (
+                    s_campaignIdToVotesCount[s_campaigns[i].id].yesVotes +
+                        s_campaignIdToVotesCount[s_campaigns[i].id].noVotes ==
+                    s_campaignIdToDonations[s_campaigns[i].id].length
+                ) {
+                    readyToFinalizeCampaigns[j] = s_campaigns[i];
+                    j++;
+                }
+            }
+        }
+        return readyToFinalizeCampaigns;
     }
 
     function getDonatorDonationsForAllCampaigns()

@@ -36,7 +36,6 @@ export default class EduFundClient {
 
   async getCampaigns() {
     try {
-      console.log("getCampaigns called.");
       return await this.contract.getCampaigns();
     } catch (e: any) {
       throw new Error(e);
@@ -89,6 +88,46 @@ export default class EduFundClient {
   async getAllDonations() {
     try {
       return await this.contract.getDonatorDonationsForAllCampaigns();
+    } catch (e: any) {
+      throw new Error(e);
+    }
+  }
+
+  async getProposedTransactionsByCampaignId(id: string) {
+    try {
+      return await this.contract.getProposalTransactions(id);
+    } catch (e: any) {
+      throw new Error(e);
+    }
+  }
+
+  async getVotersByCampaignId(id: string) {
+    try {
+      return await this.contract.getVoters(id);
+    } catch (e: any) {
+      throw new Error(e);
+    }
+  }
+
+  async voteProposal(campaignId: string, vote: boolean) {
+    try {
+      await this.contract.vote(campaignId, vote ? 1 : 0);
+    } catch (e: any) {
+      throw new Error(e);
+    }
+  }
+
+  async getVotedCampaigns() {
+    try {
+      return await this.contract.getVotedCampaigns();
+    } catch (e: any) {
+      throw new Error(e);
+    }
+  }
+
+  async getTransactionReadyCampaigns() {
+    try {
+      return await this.contract.getTransactionReadyCampaigns();
     } catch (e: any) {
       throw new Error(e);
     }

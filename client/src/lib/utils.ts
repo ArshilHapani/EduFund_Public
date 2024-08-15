@@ -60,6 +60,7 @@ export async function getRandomImageFromUnsplash() {
   const FALLBACK_IMAGE =
     "https://imgs.search.brave.com/rXr-KhcwB2hKwgiLCrUXJc6GZiHDJTN52rsNX0BKOjw/rs:fit:1200:1200:1/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJjYXZlLmNv/bS93cC9lamw3Y1N1/LmpwZw";
   try {
+    throw new Error("Unsplash API is not working"); // fallback for the time being... (don't want to drain my unsplash credits)
     const queries = [
       "crypto",
       "blockchain",
@@ -75,12 +76,6 @@ export async function getRandomImageFromUnsplash() {
       "space",
       "science",
       "education",
-      "health",
-      "fitness",
-      "sport",
-      "travel",
-      "fashion",
-      "business",
     ];
 
     const randomQuery = queries[Math.floor(Math.random() * queries.length)];
@@ -96,8 +91,8 @@ export async function getRandomImageFromUnsplash() {
       return localStorage.getItem("LastFetchedImage");
     }
     const response = await fetch(
-      `https://api.unsplash.com/photos/random`, // only when family is not around.. (can't trust unsplash images)
-      // `https://api.unsplash.com/photos/random?query=${randomQuery}`,
+      // `https://api.unsplash.com/photos/random`, // only when family is not around.. (can't trust unsplash images)
+      `https://api.unsplash.com/photos/random?query=${randomQuery}`,
       {
         headers: {
           Authorization: `Client-ID ${process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY}`,

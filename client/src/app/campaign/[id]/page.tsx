@@ -23,6 +23,7 @@ import {
   getRandomImageFromUnsplash,
 } from "@/lib/utils";
 import { TOKEN_SYMBOL } from "@/lib/constants";
+import EmptyState from "@/components/EmptyState";
 
 type Props = {
   params: {
@@ -63,14 +64,15 @@ const CampaignDetail = ({ params: { id } }: Props) => {
   );
   useEffect(() => {
     (async function () {
-      if (!id || !signer) return;
+      if (!id || !signer || !eduFund) return;
       const campaign = await eduFund.getCampaignById(id);
       const donators = await eduFund.getDonationsByCampaignId(id);
 
       setDonators(donators);
       setCampaign(campaign);
     })();
-  }, [signer, eduFund]);
+    // }, [signer, eduFund]);
+  }, [signer]);
 
   useEffect(() => {
     (async function () {
@@ -107,6 +109,8 @@ const CampaignDetail = ({ params: { id } }: Props) => {
       setLoading(false);
     }
   }
+  if (campaign.id == "" || campaign.deadline === "0")
+    return <EmptyState title="No campaign found" />;
 
   return (
     <div>

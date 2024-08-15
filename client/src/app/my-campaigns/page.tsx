@@ -27,10 +27,10 @@ const MyCampaign = () => {
   useEffect(() => {
     (async function () {
       if (!eduFund || !signer) return;
-      if (dataStoredCampaigns.length) {
-        setCampaigns(dataStoredCampaigns);
-        return;
-      }
+      // if (dataStoredCampaigns.length) { // caching for later
+      //   setCampaigns(dataStoredCampaigns);
+      //   return;
+      // }
       const campaigns = transformDataToCampaign(await eduFund.getCampaigns());
       setCampaigns(campaigns);
       setDataStoreCampaigns(campaigns);

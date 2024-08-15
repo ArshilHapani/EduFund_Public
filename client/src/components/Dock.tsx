@@ -11,7 +11,7 @@ import TooltipComponent from "./TooltipComponent";
 const Dock = () => {
   const pathName = usePathname();
   return (
-    <div className="fixed left-1/2 bottom-8 transform -translate-x-1/2 flex justify-center items-center">
+    <div className="fixed z-10 left-1/2 bottom-8 transform -translate-x-1/2 flex justify-center items-center">
       <div className="bg-dockBlack/50 backdrop-blur-lg gap-4 px-4 py-3 rounded-3xl flex justify-evenly">
         {DOCK_ITEMS.map((item, idx) => (
           <TooltipComponent title={item.title} key={item.title + idx}>

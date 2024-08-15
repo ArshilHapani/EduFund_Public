@@ -1,6 +1,7 @@
 import {
   Blocks,
   ChartBarBig,
+  FlagTriangleRight,
   HandCoins,
   PackageOpen,
   Radio,
@@ -70,6 +71,11 @@ export const DOCK_ITEMS = [
     title: "Campaigns to vote",
     icon: ChartBarBig,
     href: "/campaigns-to-vote",
+  },
+  {
+    title: "Voted campaigns",
+    icon: FlagTriangleRight,
+    href: "/voted-campaigns",
   },
 ];
 export const AVATARS = [

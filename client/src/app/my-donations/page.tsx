@@ -21,22 +21,29 @@ import useCustomContract from "@/hooks/useContract";
 import { formatEther } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { TOKEN_SYMBOL } from "@/lib/constants";
+import useDataStore from "@/hooks/useDataStore";
 
-type DonationType = [BigNumberish, BigNumberish][];
+export type DonationType = [BigNumberish, BigNumberish][];
 
 const MyDonation = () => {
   const [donations, setDonations] = useState<DonationType>([]);
   const eduFund = useCustomContract();
   const signer = useSigner();
+  const { setDonatedCampaigns, donatedCampaigns } = useDataStore();
   useEffect(() => {
     (async function () {
       if (!eduFund || !signer) return;
+      if (donatedCampaigns.length) {
+        setDonations(donatedCampaigns);
+        return;
+      }
       let donations = (await eduFund.getAllDonations()) as DonationType;
       donations = donations.filter(
         (donation: [BigNumberish, BigNumberish]) =>
           Number(formatEther(donation[1])) > 0
       );
       setDonations(donations);
+      setDonatedCampaigns(donations);
     })();
     // }, [signer, eduFund]); // be careful it leads to memory leak but provides instant updates
   }, [signer]);
