@@ -14,11 +14,11 @@ import CampaignWrapper from "@/components/CampaignWrapper";
 import EmptyState from "@/components/EmptyState";
 import useDataStore from "@/hooks/useDataStore";
 
-const MyCampaign = () => {
+const CampaignsToVote = () => {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
-  const address = useAddress();
   const { signer } = useThirdwebConnectedWalletContext();
   const eduFund = useContractV1();
+  const address = useAddress();
   const {
     campaigns: dataStoredCampaigns,
     setCampaigns: setDataStoreCampaigns,
@@ -32,8 +32,8 @@ const MyCampaign = () => {
         return;
       }
       const campaigns = transformDataToCampaign(await eduFund.getCampaigns());
-      setCampaigns(campaigns);
       setDataStoreCampaigns(campaigns);
+      setCampaigns(campaigns);
     })();
     // }, [signer, eduFund]); // be careful it leads to memory leak but provides instant updates
   }, [signer]);
@@ -42,11 +42,11 @@ const MyCampaign = () => {
     <main className="bg-primaryBlack">
       <CampaignWrapper
         title="My Campaigns"
-        campaigns={campaigns.filter((campaign) => campaign.owner === address)}
+        campaigns={campaigns}
         subTitle="You have not created any campaign yet."
       />
     </main>
   );
 };
 
-export default MyCampaign;
+export default CampaignsToVote;

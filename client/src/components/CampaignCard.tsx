@@ -2,8 +2,10 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import { CheckIcon, Vote } from "lucide-react";
 
-import { Campaign } from "@/lib/types";
+import { type Campaign } from "@/lib/types";
 import {
   calculateRemainingDays,
   cn,
@@ -11,12 +13,12 @@ import {
   getRandomAvatar,
   getRandomImageFromUnsplash,
 } from "@/lib/utils";
-import Link from "next/link";
 import { Button } from "./ui/button";
-import { CheckIcon } from "lucide-react";
 import TooltipComponent from "./TooltipComponent";
 import ProposeTransaction from "./modals/ProposeTransaction";
 import useModal from "@/hooks/useModal";
+import { useAddress } from "@thirdweb-dev/react";
+import { TOKEN_SYMBOL } from "@/lib/constants";
 
 type Props = {
   campaign: Campaign;
@@ -43,10 +45,14 @@ const CampaignCard = ({ campaign }: Props) => {
       const image = await getRandomImageFromUnsplash();
       setRandomImageUrl(image);
     })();
+    console.log("Campaign card mounted");
   }, []);
-
+  const address = useAddress();
   const isCampaignReadyToProposeTransaction =
-    balance >= goal && !isTransactionProposed && !isTransactionExecuted;
+    owner === address &&
+    Number(formatEther(balance)) >= Number(formatEther(goal)) &&
+    !isTransactionProposed &&
+    !isTransactionExecuted;
   return (
     <div className="sm:w-[280px] w-full rounded-[15px] bg-[#1c1c24] cursor-pointer relative">
       <Link href={`/campaign/${id}`} className="block">
@@ -71,7 +77,7 @@ const CampaignCard = ({ campaign }: Props) => {
                 {formatEther(balance)}
               </h4>
               <p className="mt-[3px] font-epilogue font-normal text-[12px] leading-[18px] text-[#808191] sm:max-w-[120px] truncate">
-                Raised of {formatEther(goal)} ETH
+                Raised of {formatEther(goal)} {TOKEN_SYMBOL}
               </p>
             </div>
             <div className="flex flex-col">
@@ -110,7 +116,7 @@ const CampaignCard = ({ campaign }: Props) => {
       </Link>
       {isCampaignReadyToProposeTransaction && (
         <div className="absolute bottom-4 right-4 z-10">
-          <TooltipComponent title="Finalize transaction">
+          <TooltipComponent title="Propose transaction">
             <Button
               className="text-primaryGreen rounded-full"
               size="icon"
@@ -125,6 +131,15 @@ const CampaignCard = ({ campaign }: Props) => {
           </TooltipComponent>
         </div>
       )}
+      {isTransactionProposed &&
+        owner === address &&
+        !isCampaignReadyToProposeTransaction && (
+          <div className="absolute bottom-4 right-4 z-10">
+            <TooltipComponent title="Show votes">
+              <Vote className="h-6 w-6 text-primaryPurple" />
+            </TooltipComponent>
+          </div>
+        )}
       <ProposeTransaction campaign={campaign} />
     </div>
   );

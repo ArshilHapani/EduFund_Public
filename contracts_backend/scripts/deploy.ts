@@ -2,6 +2,7 @@ import { ethers, network } from "hardhat";
 import fs from "node:fs";
 import path from "path";
 import abi from "../artifacts/contracts/EduFund.sol/EduFund.json";
+import verifyContract from "../utils/verify";
 
 (async function () {
   const EduFund = await ethers.getContractFactory("EduFund");
@@ -25,6 +26,10 @@ import abi from "../artifacts/contracts/EduFund.sol/EduFund.json";
   let addresses: Record<string, any> = {};
   if (fs.existsSync(addressesFilePath)) {
     addresses = JSON.parse(fs.readFileSync(addressesFilePath, "utf8"));
+  }
+
+  if (network.name === "sepolia" || network.name === "opencampus") {
+    await verifyContract(await eduFund.getAddress(), []);
   }
 
   addresses[networkName] = {

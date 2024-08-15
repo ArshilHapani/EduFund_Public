@@ -36,6 +36,7 @@ export default class EduFundClient {
 
   async getCampaigns() {
     try {
+      console.log("getCampaigns called.");
       return await this.contract.getCampaigns();
     } catch (e: any) {
       throw new Error(e);

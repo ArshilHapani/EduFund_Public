@@ -11,6 +11,7 @@ import EmptyState from "@/components/EmptyState";
 
 import useCustomContract from "@/hooks/useContract";
 import useLoader from "@/hooks/useLoader";
+import { TOKEN_SYMBOL } from "@/lib/constants";
 
 interface FormSchema {
   title: string;
@@ -108,8 +109,8 @@ const AddCampaign = () => {
             isInvalid={!!errors.title}
           />
           <TextField<FormSchema>
-            label="Goal (in EDU token)"
-            placeholder="100 EDU"
+            label={`Goal (in ${TOKEN_SYMBOL} token)`}
+            placeholder={`100 ${TOKEN_SYMBOL}`}
             type="number"
             name="goal"
             register={register}

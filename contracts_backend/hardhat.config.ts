@@ -46,6 +46,10 @@ const config: HardhatUserConfig = {
       url: process.env.ARBITRUM_JSON_RPC_URL,
       accounts: [process.env.WALLET_PRIVATE_KEY!],
     },
+    sepolia: {
+      url: process.env.SEPOLIA_JSON_RPC_URL,
+      accounts: [process.env.WALLET_PRIVATE_KEY!],
+    },
   },
   gasReporter: {
     enabled: true, // enable this flag to generate gas report

@@ -29,7 +29,13 @@ export function transformDataToCampaign(rawData: any[][]): Campaign[] {
   return ans;
 }
 
-export function formatEther(balance: any): string {
+export function formatEther(
+  balance: any,
+  needNumber: boolean = false
+): number | string {
+  if (needNumber) {
+    return Number(ethers.utils.formatEther(balance));
+  }
   return ethers.utils.formatEther(balance);
 }
 
@@ -64,6 +70,17 @@ export async function getRandomImageFromUnsplash() {
       "animal",
       "technology",
       "art",
+      "music",
+      "ai",
+      "space",
+      "science",
+      "education",
+      "health",
+      "fitness",
+      "sport",
+      "travel",
+      "fashion",
+      "business",
     ];
 
     const randomQuery = queries[Math.floor(Math.random() * queries.length)];
@@ -79,7 +96,8 @@ export async function getRandomImageFromUnsplash() {
       return localStorage.getItem("LastFetchedImage");
     }
     const response = await fetch(
-      `https://api.unsplash.com/photos/random?query=${randomQuery}`,
+      `https://api.unsplash.com/photos/random`, // only when family is not around.. (can't trust unsplash images)
+      // `https://api.unsplash.com/photos/random?query=${randomQuery}`,
       {
         headers: {
           Authorization: `Client-ID ${process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY}`,

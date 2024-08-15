@@ -6,28 +6,41 @@ import { useThirdwebConnectedWalletContext } from "@thirdweb-dev/react";
 
 import useContractV1 from "@/hooks/useContract";
 import { Campaign } from "@/lib/types";
-import { transformDataToCampaign } from "@/lib/utils";
+import { formatEther, transformDataToCampaign } from "@/lib/utils";
 import CampaignWrapper from "@/components/CampaignWrapper";
+import useDataStore from "@/hooks/useDataStore";
 
 export default function Home() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const { signer } = useThirdwebConnectedWalletContext();
   const eduFund = useContractV1();
+  const { setCampaigns: setCampaignsStore, campaigns: dataStoreCampaign } =
+    useDataStore();
   useEffect(() => {
     (async function () {
       if (!eduFund || !signer) return;
-      const campaigns = await eduFund.getCampaigns();
-      setCampaigns(transformDataToCampaign(campaigns));
+      if (dataStoreCampaign.length) {
+        setCampaigns(dataStoreCampaign);
+        return;
+      }
+      const campaigns = transformDataToCampaign(await eduFund.getCampaigns());
+      setCampaigns(campaigns);
+      setCampaignsStore(campaigns);
     })();
-  }, [signer, eduFund]);
+    // }, [signer, eduFund]); // be careful it leads to memory leak but provides instant updates
+  }, [signer]);
 
   return (
     <main className="bg-primaryBlack">
       <CampaignWrapper
         title="Active Campaigns"
         campaigns={campaigns.filter(
-          (campaign) => campaign.active && campaign.balance < campaign.goal
+          (campaign) =>
+            campaign.active &&
+            formatEther(campaign.balance, true) <
+              formatEther(campaign.goal, true)
         )}
+        subTitle="You have not created any campaign yet."
       />
     </main>
   );
