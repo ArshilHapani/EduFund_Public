@@ -250,6 +250,28 @@ contract EduFund {
         emit Events.CampaignMadeInactive(_campaignId);
     }
 
+    function getCampaigns() public view returns (Campaign[] memory) {
+        return s_campaigns;
+    }
+
+    function getCampaignDonators(
+        uint256 _campaignId
+    ) public view returns (Donation[] memory) {
+        return s_campaignIdToDonations[_campaignId];
+    }
+
+    function getDonatorDonationsForAllCampaigns()
+        public
+        view
+        returns (Donation[][] memory)
+    {
+        Donation[][] memory donations = new Donation[][](s_campaigns.length);
+        for (uint256 i = 0; i < s_campaigns.length; i++) {
+            donations[i] = s_campaignIdToDonations[i];
+        }
+        return donations;
+    }
+
     function calculatePercentageAmount(
         uint256 amount
     ) internal pure returns (uint256) {

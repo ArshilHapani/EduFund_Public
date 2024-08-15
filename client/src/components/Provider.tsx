@@ -1,7 +1,7 @@
 "use client";
 
-import { ThirdwebProvider } from "@thirdweb-dev/react";
 import { useEffect, useState } from "react";
+import { ThirdwebProvider } from "@thirdweb-dev/react";
 
 type Props = {
   children: React.ReactNode;

@@ -2,15 +2,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useThirdwebConnectedWalletContext } from "@thirdweb-dev/react";
+import {
+  useAddress,
+  useThirdwebConnectedWalletContext,
+} from "@thirdweb-dev/react";
 
 import useContractV1 from "@/hooks/useContract";
 import { Campaign } from "@/lib/types";
 import { transformDataToCampaign } from "@/lib/utils";
 import CampaignWrapper from "@/components/CampaignWrapper";
+import EmptyState from "@/components/EmptyState";
 
-export default function Home() {
+const MyCampaign = () => {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const address = useAddress();
   const { signer } = useThirdwebConnectedWalletContext();
   const eduFund = useContractV1();
   useEffect(() => {
@@ -20,15 +25,15 @@ export default function Home() {
       setCampaigns(transformDataToCampaign(campaigns));
     })();
   }, [signer, eduFund]);
-
+  if (!signer) return <EmptyState title="Connect wallet" />;
   return (
     <main className="bg-primaryBlack">
       <CampaignWrapper
-        title="Active Campaigns"
-        campaigns={campaigns.filter(
-          (campaign) => campaign.active && campaign.balance < campaign.goal
-        )}
+        title="My Campaigns"
+        campaigns={campaigns.filter((campaign) => campaign.owner === address)}
       />
     </main>
   );
-}
+};
+
+export default MyCampaign;
