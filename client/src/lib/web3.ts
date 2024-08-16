@@ -8,7 +8,8 @@ export default class EduFundClient {
 
   constructor(signer: Signer | undefined) {
     this.contract = new ethers.Contract(
-      addresses.localhost.EduFund,
+      addresses.sepolia.EduFund,
+      // addresses.localhost.EduFund,
       abi.EduFund,
       signer
     );
