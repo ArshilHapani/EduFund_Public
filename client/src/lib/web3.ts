@@ -8,7 +8,8 @@ export default class EduFundClient {
 
   constructor(signer: Signer | undefined) {
     this.contract = new ethers.Contract(
-      addresses.localhost.EduFund,
+      addresses.sepolia.EduFund,
+      // addresses.localhost.EduFund,
       abi.EduFund,
       signer
     );
@@ -88,6 +89,54 @@ export default class EduFundClient {
   async getAllDonations() {
     try {
       return await this.contract.getDonatorDonationsForAllCampaigns();
+    } catch (e: any) {
+      throw new Error(e);
+    }
+  }
+
+  async getProposedTransactionsByCampaignId(id: string) {
+    try {
+      return await this.contract.getProposalTransactions(id);
+    } catch (e: any) {
+      throw new Error(e);
+    }
+  }
+
+  async getVotersByCampaignId(id: string) {
+    try {
+      return await this.contract.getVoters(id);
+    } catch (e: any) {
+      throw new Error(e);
+    }
+  }
+
+  async voteProposal(campaignId: string, vote: boolean) {
+    try {
+      await this.contract.vote(campaignId, vote ? 1 : 0);
+    } catch (e: any) {
+      throw new Error(e);
+    }
+  }
+
+  async getVotedCampaigns() {
+    try {
+      return await this.contract.getVotedCampaigns();
+    } catch (e: any) {
+      throw new Error(e);
+    }
+  }
+
+  async getTransactionReadyCampaigns() {
+    try {
+      return await this.contract.getTransactionReadyCampaigns();
+    } catch (e: any) {
+      throw new Error(e);
+    }
+  }
+
+  async finalizeTransaction(campaignId: string) {
+    try {
+      await this.contract.finalizeTransaction(campaignId);
     } catch (e: any) {
       throw new Error(e);
     }

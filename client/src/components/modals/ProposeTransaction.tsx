@@ -2,7 +2,7 @@
 
 import { useFieldArray, useForm } from "react-hook-form";
 
-import { Minus, Plus, Trash2 } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
 import useModal from "@/hooks/useModal";
 import { Campaign } from "@/lib/types";
 import {
@@ -17,6 +17,8 @@ import TextField from "../TextField";
 import { useToast } from "../ui/use-toast";
 import useLoader from "@/hooks/useLoader";
 import useCustomContract from "@/hooks/useContract";
+import { formatEther } from "@/lib/utils";
+import { TOKEN_SYMBOL } from "@/lib/constants";
 
 type Props = {
   campaign: Campaign;
@@ -57,6 +59,20 @@ const ProposeTransaction = ({ campaign }: Props) => {
       toast({
         title: "Error",
         description: "At least one transaction is required",
+        variant: "destructive",
+      });
+      return;
+    }
+    const totalRequiredFund = data.details.reduce(
+      (acc, cur) => acc + parseFloat(cur.amount),
+      0
+    );
+    if (totalRequiredFund != Number(formatEther(campaign.goal))) {
+      toast({
+        title: "Error",
+        description: `Total required fund must be equal to the campaign goal (${formatEther(
+          campaign.goal
+        )} ${TOKEN_SYMBOL})`,
         variant: "destructive",
       });
       return;

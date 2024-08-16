@@ -1,4 +1,13 @@
-import { Blocks, HandCoins, PackageOpen, Radio, User } from "lucide-react";
+import {
+  Blocks,
+  ChartBarBig,
+  CheckCircle2,
+  FlagTriangleRight,
+  HandCoins,
+  PackageOpen,
+  Radio,
+  User,
+} from "lucide-react";
 
 import {
   lorelei,
@@ -59,6 +68,21 @@ export const DOCK_ITEMS = [
     icon: PackageOpen,
     href: "/proposed-transaction",
   },
+  {
+    title: "Campaigns to vote",
+    icon: ChartBarBig,
+    href: "/campaigns-to-vote",
+  },
+  {
+    title: "Voted campaigns",
+    icon: FlagTriangleRight,
+    href: "/voted-campaigns",
+  },
+  {
+    title: "Finalized campaigns",
+    icon: CheckCircle2,
+    href: "/finalized-campaigns",
+  },
 ];
 export const AVATARS = [
   lorelei,
@@ -92,3 +116,5 @@ export const AVATARS = [
   shapes,
   thumbs,
 ];
+
+export const TOKEN_SYMBOL = "ETH";

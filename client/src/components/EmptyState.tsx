@@ -5,7 +5,7 @@ type EmptyStateProps = {
 
 const EmptyState: React.FC<EmptyStateProps> = ({
   title = "No exact matches",
-  subtitle = "Try changing or removing some of your filter",
+  subtitle = "",
 }) => {
   return (
     <div className="h-[60vh] flex flex-col gap-2 justify-center items-center  ">

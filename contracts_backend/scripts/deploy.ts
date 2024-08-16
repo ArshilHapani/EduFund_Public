@@ -1,7 +1,9 @@
 import { ethers, network } from "hardhat";
 import fs from "node:fs";
 import path from "path";
+
 import abi from "../artifacts/contracts/EduFund.sol/EduFund.json";
+import verifyContract from "../utils/verify";
 
 (async function () {
   const EduFund = await ethers.getContractFactory("EduFund");
@@ -15,6 +17,14 @@ import abi from "../artifacts/contracts/EduFund.sol/EduFund.json";
   console.log(`Network: ${networkName}`);
   console.log(`EduFund deployed to: ${eduFundAddress}`);
 
+  if (network.name === "sepolia" || network.name === "opencampus") {
+    await verifyContract(await eduFund.getAddress(), []);
+  }
+
+  await storeContractAddressAndABI(eduFundAddress);
+})();
+
+export async function storeContractAddressAndABI(address: string) {
   const addressesFilePath = path.resolve(
     __dirname,
     "../../client/src/lib/addresses.json"
@@ -27,9 +37,9 @@ import abi from "../artifacts/contracts/EduFund.sol/EduFund.json";
     addresses = JSON.parse(fs.readFileSync(addressesFilePath, "utf8"));
   }
 
-  addresses[networkName] = {
-    ...addresses[networkName],
-    EduFund: eduFundAddress,
+  addresses[network.name] = {
+    ...addresses[network.name],
+    EduFund: address,
   };
 
   fs.writeFileSync(addressesFilePath, JSON.stringify(addresses, null, 2));
@@ -50,4 +60,4 @@ import abi from "../artifacts/contracts/EduFund.sol/EduFund.json";
   abiWriteStream.on("error", (err) => {
     console.error("Error writing ABI to file:", err);
   });
-})();
+}

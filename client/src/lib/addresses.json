@@ -1,8 +1,14 @@
 {
   "opencampus": {
-    "EduFund": "0xb19b6807d13E20D488fFe2B93263187Fc4972798"
+    "EduFund": "0xB2C2F3CF7Aea6F39685a262ED269C3097F800FBc"
+  },
+  "sepolia": {
+    "EduFund": "0x0Cc10777362C3471801340c987543a39539D378f"
   },
   "localhost": {
-    "EduFund": "0x0165878A594ca255338adfa4d48449f69242Eb8F"
+    "EduFund": "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+  },
+  "hardhat": {
+    "EduFund": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
   }
 }

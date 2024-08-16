@@ -22,6 +22,8 @@ import {
   getRandomAvatar,
   getRandomImageFromUnsplash,
 } from "@/lib/utils";
+import { TOKEN_SYMBOL } from "@/lib/constants";
+import EmptyState from "@/components/EmptyState";
 
 type Props = {
   params: {
@@ -62,14 +64,15 @@ const CampaignDetail = ({ params: { id } }: Props) => {
   );
   useEffect(() => {
     (async function () {
-      if (!id || !signer) return;
+      if (!id || !signer || !eduFund) return;
       const campaign = await eduFund.getCampaignById(id);
       const donators = await eduFund.getDonationsByCampaignId(id);
 
       setDonators(donators);
       setCampaign(campaign);
     })();
-  }, [signer, eduFund]);
+    // }, [signer, eduFund]);
+  }, [signer]);
 
   useEffect(() => {
     (async function () {
@@ -106,6 +109,8 @@ const CampaignDetail = ({ params: { id } }: Props) => {
       setLoading(false);
     }
   }
+  if (campaign.id == "" || campaign.deadline === "0")
+    return <EmptyState title="No campaign found" />;
 
   return (
     <div>
@@ -197,7 +202,7 @@ const CampaignDetail = ({ params: { id } }: Props) => {
                       {index + 1}. {item[0]}
                     </p>
                     <p className="font-epilogue font-normal text-[16px] text-[#808192] leading-[26px] break-all">
-                      {formatEther((item[1] as any).toString())} EDU
+                      {formatEther((item[1] as any).toString())} {TOKEN_SYMBOL}
                     </p>
                   </div>
                 ))
@@ -224,7 +229,7 @@ const CampaignDetail = ({ params: { id } }: Props) => {
               <div className="mt-[30px]">
                 <input
                   type="number"
-                  placeholder="EDU 0.1"
+                  placeholder={`${TOKEN_SYMBOL} 0.1`}
                   step={0.01}
                   className="w-full py-[10px] sm:px-[20px] px-[15px] outline-none border-[1px] border-[#3a3a43] bg-transparent font-epilogue text-white text-[18px] leading-[30px] placeholder:text-[#4b5264] rounded-[10px]"
                   value={amount}

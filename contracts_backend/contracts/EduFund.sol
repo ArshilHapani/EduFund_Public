@@ -27,9 +27,14 @@ contract EduFund {
         address donor;
         uint256 amount;
     }
+
     struct VoteStruct {
         address voter;
         Vote vote;
+    }
+    struct CampaignVote {
+        uint256 yesVotes;
+        uint256 noVotes;
     }
 
     struct Transaction {
@@ -43,6 +48,9 @@ contract EduFund {
     mapping(uint256 => Donation[]) public s_campaignIdToDonations;
     mapping(uint256 => Transaction[]) public s_campaignIdToTransactions;
     mapping(uint256 => VoteStruct[]) public s_campaignIdToVotes;
+    mapping(uint256 => mapping(address => bool))
+        public s_campaignIdToVoterToHasVoted;
+    mapping(uint256 => CampaignVote) public s_campaignIdToVotesCount;
 
     // for fast lookup
     // campaignId -> donator -> amount
@@ -172,7 +180,12 @@ contract EduFund {
         if (!s_campaigns[_campaignId].isTransactionProposed) {
             revert EduFund__Errors.TransactionIsNotYetProposed();
         }
-
+        s_campaignIdToVoterToHasVoted[_campaignId][msg.sender] = true;
+        if (v == Vote.Yes) {
+            s_campaignIdToVotesCount[_campaignId].yesVotes++;
+        } else {
+            s_campaignIdToVotesCount[_campaignId].noVotes++;
+        }
         s_campaignIdToVotes[_campaignId].push(VoteStruct(msg.sender, v));
 
         emit Events.CampaignVoted(
@@ -182,6 +195,8 @@ contract EduFund {
             v == Vote.Yes
         );
     }
+
+    //////////////////// Getters Functions ////////////////////
 
     function finalizeTransaction(
         uint256 _campaignId
@@ -194,15 +209,8 @@ contract EduFund {
             _campaignId
         ];
         VoteStruct[] storage votes = s_campaignIdToVotes[_campaignId];
-        uint256 yesVotes = 0;
-        uint256 noVotes = 0;
-        for (uint256 i = 0; i < votes.length; i++) {
-            if (votes[i].vote == Vote.Yes) {
-                yesVotes++;
-            } else {
-                noVotes++;
-            }
-        }
+        uint256 yesVotes = s_campaignIdToVotesCount[_campaignId].yesVotes;
+        uint256 noVotes = s_campaignIdToVotesCount[_campaignId].noVotes;
         if (
             (yesVotes == 0 && noVotes == 0) ||
             yesVotes + noVotes != votes.length
@@ -260,16 +268,91 @@ contract EduFund {
         return s_campaignIdToDonations[_campaignId];
     }
 
+    function getVoters(
+        uint256 _campaignId
+    ) public view returns (VoteStruct[] memory) {
+        return s_campaignIdToVotes[_campaignId];
+    }
+
+    function getProposalTransactions(
+        uint256 _campaignId
+    ) public view returns (Transaction[] memory) {
+        return s_campaignIdToTransactions[_campaignId];
+    }
+
+    function getVotedCampaigns() public view returns (Campaign[] memory) {
+        Campaign[] memory votedCampaigns = new Campaign[](s_campaigns.length);
+        uint256 j = 0;
+        for (uint256 i = 0; i < s_campaigns.length; i++) {
+            if (s_campaignIdToVoterToHasVoted[s_campaigns[i].id][msg.sender]) {
+                votedCampaigns[j] = s_campaigns[i];
+                j++;
+            }
+        }
+        return votedCampaigns;
+    }
+
+    function getFinalizedCampaigns() public view returns (Campaign[] memory) {
+        Campaign[] memory finalizedCampaigns = new Campaign[](
+            s_campaigns.length
+        );
+        uint256 j = 0;
+        for (uint256 i = 0; i < s_campaigns.length; i++) {
+            if (s_campaigns[i].isTransactionExecuted) {
+                finalizedCampaigns[j] = s_campaigns[i];
+                j++;
+            }
+        }
+        return finalizedCampaigns;
+    }
+
+    function getTransactionReadyCampaigns()
+        public
+        view
+        returns (Campaign[] memory)
+    {
+        Campaign[] memory readyToFinalizeCampaigns = new Campaign[](
+            s_campaigns.length
+        );
+        uint256 j = 0;
+        for (uint256 i = 0; i < s_campaigns.length; i++) {
+            if (
+                s_campaigns[i].owner == msg.sender &&
+                s_campaigns[i].isTransactionProposed &&
+                !s_campaigns[i].isTransactionExecuted
+            ) {
+                if (
+                    s_campaignIdToVotesCount[s_campaigns[i].id].yesVotes +
+                        s_campaignIdToVotesCount[s_campaigns[i].id].noVotes ==
+                    s_campaignIdToDonations[s_campaigns[i].id].length
+                ) {
+                    readyToFinalizeCampaigns[j] = s_campaigns[i];
+                    j++;
+                }
+            }
+        }
+        return readyToFinalizeCampaigns;
+    }
+
     function getDonatorDonationsForAllCampaigns()
         public
         view
-        returns (Donation[][] memory)
+        returns (uint256[][] memory)
     {
-        Donation[][] memory donations = new Donation[][](s_campaigns.length);
+        uint256[][] memory donatorDonations = new uint256[][](
+            s_campaigns.length
+        );
+
         for (uint256 i = 0; i < s_campaigns.length; i++) {
-            donations[i] = s_campaignIdToDonations[i];
+            donatorDonations[i] = new uint256[](2);
+            uint256 amount = s_campaignIdToDonatorToDonations[
+                s_campaigns[i].id
+            ][msg.sender];
+            donatorDonations[i][0] = s_campaigns[i].id;
+            donatorDonations[i][1] = amount;
         }
-        return donations;
+
+        return donatorDonations;
     }
 
     function calculatePercentageAmount(
@@ -310,12 +393,8 @@ contract EduFund {
         if (s_campaignIdToDonatorToDonations[_campaignId][msg.sender] == 0) {
             revert EduFund__Errors.OnlyDonatorsCanVote();
         }
-        // check if the donator has already voted
-        VoteStruct[] memory votes = s_campaignIdToVotes[_campaignId];
-        for (uint256 i = 0; i < votes.length; i++) {
-            if (votes[i].voter == msg.sender) {
-                revert EduFund__Errors.CampaignAlreadyVoted();
-            }
+        if (s_campaignIdToVoterToHasVoted[_campaignId][msg.sender]) {
+            revert EduFund__Errors.CampaignAlreadyVoted();
         }
         _;
     }
