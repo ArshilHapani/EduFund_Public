@@ -8,7 +8,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog";
-
 import {
   Table,
   TableBody,
@@ -17,13 +16,13 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "../ui/table";
 import { Button } from "../ui/button";
-import useCustomContract from "@/hooks/useContract";
-import useLoader from "@/hooks/useLoader";
 import { useToast } from "../ui/use-toast";
 import Address from "../Address";
 import { ScrollArea } from "../ui/scroll-area";
+import useCustomContract from "@/hooks/useContract";
+import useLoader from "@/hooks/useLoader";
 
 type Props = {
   campaignId: string;

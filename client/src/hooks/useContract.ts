@@ -1,5 +1,6 @@
-import EduFundClient from "@/lib/web3";
 import { useThirdwebConnectedWalletContext } from "@thirdweb-dev/react";
+
+import EduFundClient from "@/lib/web3";
 
 function useCustomContract() {
   const { signer } = useThirdwebConnectedWalletContext();

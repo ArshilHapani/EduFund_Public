@@ -2,6 +2,7 @@
 
 import useModal from "@/hooks/useModal";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
+import { Badge } from "../ui/badge";
 import {
   Table,
   TableBody,
@@ -12,7 +13,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { VoterType } from "@/app/campaigns-to-vote/[id]/page";
-import { Badge } from "../ui/badge";
 
 type Props = {
   campaignId: string;

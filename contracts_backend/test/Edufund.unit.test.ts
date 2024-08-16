@@ -503,6 +503,21 @@ describe("EduFund unit tests", function () {
         expect(amount).to.equal(parseUnits(1));
       });
 
+      it("It should not allow same donator to donate more than once", async function () {
+        const signers = await ethers.getSigners();
+        await eduFund
+          .connect(signers[2])
+          .donate(campaignId, { value: parseUnits(1) });
+        await expect(
+          eduFund
+            .connect(signers[2])
+            .donate(campaignId, { value: parseUnits(1) })
+        ).to.be.revertedWithCustomError(
+          { interface: _interface },
+          "DonatorAlreadyDonated"
+        );
+      });
+
       it("Should not allow to donate after the target amount is reached", async function () {
         await expect(
           eduFund.donate(campaignId, {
@@ -562,5 +577,3 @@ describe("EduFund unit tests", function () {
     });
   });
 });
-
-// Helper functions

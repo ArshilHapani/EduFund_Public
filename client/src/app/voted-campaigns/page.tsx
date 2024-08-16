@@ -4,10 +4,17 @@
 import { useEffect, useState } from "react";
 import { useThirdwebConnectedWalletContext } from "@thirdweb-dev/react";
 import { CheckCircle } from "lucide-react";
+import Link from "next/link";
 
 import useContractV1 from "@/hooks/useContract";
+import useModal from "@/hooks/useModal";
 import { Campaign } from "@/lib/types";
+import { TOKEN_SYMBOL } from "@/lib/constants";
 import { cn, formatEther, transformDataToCampaign } from "@/lib/utils";
+import {
+  ProposalTransactionType,
+  VoterType,
+} from "../campaigns-to-vote/[id]/page";
 import EmptyState from "@/components/EmptyState";
 import {
   Table,
@@ -18,17 +25,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { TOKEN_SYMBOL } from "@/lib/constants";
-import {
-  ProposalTransactionType,
-  VoterType,
-} from "../campaigns-to-vote/[id]/page";
 import { Badge } from "@/components/ui/badge";
 import TooltipComponent from "@/components/TooltipComponent";
 import { Button } from "@/components/ui/button";
 import FinalizeTransaction from "@/components/modals/FinalizeTransaction";
-import useModal from "@/hooks/useModal";
-import Link from "next/link";
 
 type DS = { [key: string]: { positiveVotes: number; negativeVotes: number } };
 

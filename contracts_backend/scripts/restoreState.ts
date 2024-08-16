@@ -1,4 +1,5 @@
 import { ethers } from "hardhat";
+
 import {
   donateCampaign,
   getCampaignAndCampaignId,
@@ -6,7 +7,6 @@ import {
   Vote,
   voteCampaign,
 } from "../utils/helper";
-
 import addresses from "../../client/src/lib/addresses.json";
 
 (async function () {

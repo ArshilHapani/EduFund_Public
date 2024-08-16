@@ -18,8 +18,8 @@ import {
 } from "@/components/ui/table";
 import EmptyState from "@/components/EmptyState";
 import useCustomContract from "@/hooks/useContract";
-import { formatEther } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { formatEther } from "@/lib/utils";
 import { TOKEN_SYMBOL } from "@/lib/constants";
 import useDataStore from "@/hooks/useDataStore";
 

@@ -8,11 +8,11 @@ import {
 } from "@thirdweb-dev/react";
 
 import useContractV1 from "@/hooks/useContract";
+import useDataStore from "@/hooks/useDataStore";
 import { Campaign } from "@/lib/types";
 import { transformDataToCampaign } from "@/lib/utils";
 import CampaignWrapper from "@/components/CampaignWrapper";
 import EmptyState from "@/components/EmptyState";
-import useDataStore from "@/hooks/useDataStore";
 
 const ProposedTransaction = () => {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
