@@ -60,7 +60,7 @@ export async function getRandomImageFromUnsplash() {
   const FALLBACK_IMAGE =
     "https://imgs.search.brave.com/rXr-KhcwB2hKwgiLCrUXJc6GZiHDJTN52rsNX0BKOjw/rs:fit:1200:1200:1/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJjYXZlLmNv/bS93cC9lamw3Y1N1/LmpwZw";
   try {
-    throw new Error("Unsplash API is not working"); // fallback for the time being... (don't want to drain my unsplash credits)
+    // throw new Error("Unsplash API is not working"); // fallback for the time being... (don't want to drain my unsplash credits)
     const queries = [
       "crypto",
       "blockchain",
