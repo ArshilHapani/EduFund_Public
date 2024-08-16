@@ -62,6 +62,9 @@ const CampaignsToVote = () => {
     );
   return (
     <main className="bg-primaryBlack">
+      <h1 className="font-epilogue font-semibold mb-[4px] text-[18px] text-white text-left ">
+        Campaigns to vote
+      </h1>
       <Table className="dark">
         <TableCaption>A list of your campaigns to vote.</TableCaption>
         <TableHeader>

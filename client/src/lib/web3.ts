@@ -132,4 +132,12 @@ export default class EduFundClient {
       throw new Error(e);
     }
   }
+
+  async finalizeTransaction(campaignId: string) {
+    try {
+      await this.contract.finalizeTransaction(campaignId);
+    } catch (e: any) {
+      throw new Error(e);
+    }
+  }
 }

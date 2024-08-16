@@ -23,9 +23,9 @@ export default function Home() {
         setCampaigns(dataStoreCampaign);
         return;
       }
-      const campaigns = transformDataToCampaign(await eduFund.getCampaigns());
-      setCampaigns(campaigns);
-      setCampaignsStore(campaigns);
+      const campaignsR = transformDataToCampaign(await eduFund.getCampaigns());
+      setCampaigns(campaignsR);
+      setCampaignsStore(campaignsR);
     })();
     // }, [signer, eduFund]); // be careful it leads to memory leak but provides instant updates
   }, [signer]);

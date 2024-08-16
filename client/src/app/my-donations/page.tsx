@@ -63,6 +63,9 @@ const MyDonation = () => {
     );
   return (
     <div>
+      <h1 className="font-epilogue font-semibold text-[18px] mb-[4px] text-white text-left ">
+        Donations
+      </h1>
       <Table className="dark">
         <TableCaption>A list of your donations.</TableCaption>
         <TableHeader>
