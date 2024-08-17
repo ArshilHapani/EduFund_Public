@@ -3,6 +3,7 @@ import React from "react";
 import { SearchIcon } from "lucide-react";
 
 import ConnectButton from "./ConnectButton";
+import MobileDrawer from "./Drawer";
 
 const Navbar = () => {
   return (
@@ -18,13 +19,9 @@ const Navbar = () => {
         </button>
       </div>
       <div className="flex justify-between w-full md:w-fit md:block">
-        <Image
-          src="/EduFund-Logo-Transparent.png"
-          alt="EduFund"
-          width={60}
-          height={60}
-          className="pointer-events-none block md:hidden"
-        />
+        <div className="block md:hidden">
+          <MobileDrawer />
+        </div>
         <ConnectButton />
       </div>
     </nav>
