@@ -23,5 +23,5 @@ import addresses from "../../client/src/lib/addresses.json";
   await donateCampaign(eduFund, signers, campaignId, 8);
 
   await proposeTransaction(eduFund, signers, campaignId);
-  await voteCampaign(eduFund, signers, campaignId, 8, Vote.YES);
+  await voteCampaign(eduFund, signers, campaignId, 8, Vote.NO);
 })();

@@ -1,0 +1,81 @@
+import Image from "next/image";
+
+import ImageRenderer from "@/components/modals/ImageRenderer";
+import CarousalWrapper from "@/components/CarousalWrapper";
+import FutureScopeAccordion from "@/components/FutureScopeAccordion";
+
+# EduFund
+
+Welcome to **EduFund!** The platform that allows you to donate to students in need.
+
+## Workflow
+
+![Workflow](/assets/workflow.png)
+
+---
+
+<br />
+<br />
+<br />
+<br />
+
+1. User creates campaign [here](/create-campaign) by providing details such as title, description, target amount, and deadline.
+2. All Campaigns are displayed [here](/) on the platform, and personal campaigns are displayed [here](/my-campaigns) `my-campaigns` page.
+3. Donators can donate to the campaigns by clicking on campaign card
+
+<ImageRenderer imageUrl="/assets/donate.png" alt="Vote" />
+
+4.{" "}The donated campaigns are showed [here](/my-donations) page.
+
+5.{" "}Once the campaign goal is reached, the owner can propose the transactions by visiting `my-campaigns` page. User can propose multiple transactions as long as their required amount satisfies the goal of campaign
+
+<CarousalWrapper images={["/assets/propose_1.png", "/assets/propose_2.png"]} />
+
+6. Once the transaction is proposed the donators can see the proposed transaction [here](/campaigns-to-vote) at `campaigns-to-vote` page.
+
+<br />
+<ImageRenderer imageUrl="/assets/vote_1.png" alt="Vote" />
+<br />
+
+7. Then donators can view the proposed transactions by clicking on `vote` button and vote their opinion.
+
+<br />
+<ImageRenderer imageUrl="/assets/vote_2.png" alt="Vote" />
+<br />
+
+8. Once the donator have voted any campaign, he/she can view the votes of other donators in the same page.
+
+<br />
+<ImageRenderer imageUrl="/assets/vote_3.png" alt="Vote" />
+<br />
+
+9. Owner can view the votes of donators in `my-campaigns` page and [here](/voted-campaigns) `voted-campaigns` page.
+
+<br />
+<CarousalWrapper
+  images={[
+    "/assets/vv1.png",
+    "/assets/vv2.png",
+    "/assets/vv3.png",
+    "/assets/vv4.png",
+  ]}
+/>
+<br />
+
+10. After all donators have voted, the owner can finalize the transactions by visiting [here](/voted-campaigns) `voted-campaigns` page.
+
+<br />
+<CarousalWrapper
+  images={["/assets/ft1.png", "/assets/ft2.png", "/assets/ft3.png"]}
+/>
+<br />
+
+11. Once the transaction is finalized, the owner can view the finalized campaigns [here](/finalized-campaigns) on `finalized-campaigns` page.
+
+<br />
+<ImageRenderer imageUrl="/assets/ffz.png" alt="Vote" />
+<br />
+
+# Future scope
+
+<FutureScopeAccordion />

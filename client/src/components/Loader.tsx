@@ -6,7 +6,6 @@ import { cn } from "@/lib/utils";
 const Loader = () => {
   const { loading, label } = useLoader();
   return (
-    // it shows fading animation when enters and exits
     <div
       className={cn(
         "fixed top-0 left-0 z-[100] w-screen transition-all duration-300 backdrop-blur-md h-screen bg-black bg-opacity-50 flex justify-center items-center",

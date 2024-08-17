@@ -67,8 +67,14 @@ const FinalizedTransaction = () => {
     return <EmptyState title="No finalized transactions" />;
   return (
     <div>
+      <h1 className="font-epilogue font-semibold mb-[4px] text-[18px] text-white text-left ">
+        Finalized campaigns
+      </h1>
       <Table className="dark">
-        <TableCaption>A list of your campaigns which are voted.</TableCaption>
+        <TableCaption>
+          A list of your campaigns which are finalized (success means majority
+          donators are in favour and Failed means inverse).
+        </TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead>Campaign ID</TableHead>

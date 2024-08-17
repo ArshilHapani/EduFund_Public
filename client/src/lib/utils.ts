@@ -40,7 +40,6 @@ export function formatEther(
 }
 
 export function calculateRemainingDays(deadline: string): number {
-  // calculate remaining days from string timestamp
   const deadlineTimestamp = parseInt(deadline);
   const currentTime = Math.floor(Date.now() / 1000);
   const remainingTime = deadlineTimestamp - currentTime;
@@ -60,7 +59,8 @@ export async function getRandomImageFromUnsplash() {
   const FALLBACK_IMAGE =
     "https://imgs.search.brave.com/rXr-KhcwB2hKwgiLCrUXJc6GZiHDJTN52rsNX0BKOjw/rs:fit:1200:1200:1/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJjYXZlLmNv/bS93cC9lamw3Y1N1/LmpwZw";
   try {
-    // throw new Error("Unsplash API is not working"); // fallback for the time being... (don't want to drain my unsplash credits)
+    if (process.env.NODE_ENV === "development")
+      throw new Error("Unsplash API is not working"); // fallback for the time being... (don't want to drain my unsplash credits)
     const queries = [
       "crypto",
       "blockchain",
@@ -108,7 +108,6 @@ export async function getRandomImageFromUnsplash() {
     localStorage.setItem("LastFetchedImage", data.urls.regular);
     return data.urls.regular;
   } catch (error) {
-    console.error("Error fetching random image:", error);
     return FALLBACK_IMAGE;
   }
 }
