@@ -71,8 +71,8 @@ const CampaignDetail = ({ params: { id } }: Props) => {
       setDonators(donators);
       setCampaign(campaign);
     })();
-    // }, [signer, eduFund]);
-  }, [signer]);
+    // }, [signer, eduFund]); // memory leak (provides instant UI update)
+  }, [signer]); // stable
 
   useEffect(() => {
     (async function () {
