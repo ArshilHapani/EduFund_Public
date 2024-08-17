@@ -4,12 +4,12 @@
 import { useEffect, useState } from "react";
 import { useThirdwebConnectedWalletContext } from "@thirdweb-dev/react";
 import { BigNumberish } from "ethers";
+import Link from "next/link";
 
 import useContractV1 from "@/hooks/useContract";
 import { Campaign } from "@/lib/types";
 import { formatEther, transformDataToCampaign } from "@/lib/utils";
 import EmptyState from "@/components/EmptyState";
-import { DonationType } from "../my-donations/page";
 import {
   Table,
   TableBody,
@@ -20,8 +20,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { TOKEN_SYMBOL } from "@/lib/constants";
+import { DonationType } from "../my-donations/page";
 
 const CampaignsToVote = () => {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);

@@ -6,13 +6,15 @@ import abi from "./abi.json";
 export default class EduFundClient {
   private contract: Contract;
 
-  constructor(signer: Signer | undefined) {
-    this.contract = new ethers.Contract(
-      addresses.sepolia.EduFund,
-      // addresses.localhost.EduFund,
-      abi.EduFund,
-      signer
-    );
+  constructor(signer: Signer | undefined, chainId: number) {
+    const address =
+      chainId === 656476
+        ? addresses.opencampus.EduFund
+        : chainId === 11155111
+        ? addresses.sepolia.EduFund
+        : addresses.localhost.EduFund;
+    console.log({ chainId });
+    this.contract = new ethers.Contract(address, abi.EduFund, signer);
   }
   getContract(): Contract {
     return this.contract;

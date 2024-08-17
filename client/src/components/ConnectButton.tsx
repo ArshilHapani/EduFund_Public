@@ -22,9 +22,6 @@ const ConnectButton = ({ className }: { className?: string }) => {
       theme="dark"
       showThirdwebBranding={false}
       style={{
-        // make it little bit transparent
-        // backgroundColor: "#8c6dfd",
-        // color: "#fff",
         borderRadius: "20px",
         padding: "10px 20px",
         cursor: "pointer",

@@ -16,13 +16,13 @@ import {
   getRandomAvatar,
   getRandomImageFromUnsplash,
 } from "@/lib/utils";
+import { TOKEN_SYMBOL } from "@/lib/constants";
 import { Button } from "./ui/button";
 import TooltipComponent from "./TooltipComponent";
 import ProposeTransaction from "./modals/ProposeTransaction";
-import useModal from "@/hooks/useModal";
-import { TOKEN_SYMBOL } from "@/lib/constants";
 import ViewVotes from "./modals/ViewVotes";
 import { VoterType } from "@/app/campaigns-to-vote/[id]/page";
+import useModal from "@/hooks/useModal";
 import useCustomContract from "@/hooks/useContract";
 
 type Props = {

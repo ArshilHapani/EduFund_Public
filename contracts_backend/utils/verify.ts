@@ -2,7 +2,7 @@ import { run } from "hardhat";
 
 export default async function verifyContract(
   contractAddress: string,
-  args: any
+  args: any[]
 ) {
   console.log("Verifying contract on etherscan...");
   try {

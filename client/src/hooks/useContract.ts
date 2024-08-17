@@ -1,9 +1,18 @@
+import {
+  useChainId,
+  useThirdwebConnectedWalletContext,
+} from "@thirdweb-dev/react";
+
 import EduFundClient from "@/lib/web3";
-import { useThirdwebConnectedWalletContext } from "@thirdweb-dev/react";
 
 function useCustomContract() {
   const { signer } = useThirdwebConnectedWalletContext();
-  const eduFundCLient = new EduFundClient(signer);
+  const chainId = useChainId();
+
+  const eduFundCLient = new EduFundClient(
+    signer,
+    chainId ?? 31337 /* Default to hardhat localhost */
+  );
   return eduFundCLient;
 }
 

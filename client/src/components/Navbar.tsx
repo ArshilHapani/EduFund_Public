@@ -1,8 +1,8 @@
 import Image from "next/image";
 import React from "react";
+import { SearchIcon } from "lucide-react";
 
 import ConnectButton from "./ConnectButton";
-import { SearchIcon } from "lucide-react";
 
 const Navbar = () => {
   return (

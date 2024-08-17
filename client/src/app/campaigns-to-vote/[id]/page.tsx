@@ -4,7 +4,7 @@
 import { useAddress, useSigner } from "@thirdweb-dev/react";
 import { BigNumber } from "ethers";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 import useLoader from "@/hooks/useLoader";
 import useCustomContract from "@/hooks/useContract";

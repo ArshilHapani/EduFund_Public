@@ -5,10 +5,10 @@ import { useEffect, useState } from "react";
 import { useThirdwebConnectedWalletContext } from "@thirdweb-dev/react";
 
 import useContractV1 from "@/hooks/useContract";
+import useDataStore from "@/hooks/useDataStore";
 import { Campaign } from "@/lib/types";
 import { formatEther, transformDataToCampaign } from "@/lib/utils";
 import CampaignWrapper from "@/components/CampaignWrapper";
-import useDataStore from "@/hooks/useDataStore";
 
 export default function Home() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);

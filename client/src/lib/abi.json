@@ -27,6 +27,11 @@
   },
   {
     "inputs": [],
+    "name": "DonatorAlreadyDonated",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "InconsistentArrayLength",
     "type": "error"
   },
@@ -340,7 +345,7 @@
       {
         "components": [
           {
-            "internalType": "address payable",
+            "internalType": "address",
             "name": "owner",
             "type": "address"
           },
@@ -418,7 +423,7 @@
       {
         "components": [
           {
-            "internalType": "address payable",
+            "internalType": "address",
             "name": "owner",
             "type": "address"
           },
@@ -519,7 +524,7 @@
       {
         "components": [
           {
-            "internalType": "address payable",
+            "internalType": "address",
             "name": "owner",
             "type": "address"
           },
@@ -584,7 +589,7 @@
       {
         "components": [
           {
-            "internalType": "address payable",
+            "internalType": "address",
             "name": "owner",
             "type": "address"
           },
@@ -889,7 +894,7 @@
     "name": "s_campaigns",
     "outputs": [
       {
-        "internalType": "address payable",
+        "internalType": "address",
         "name": "owner",
         "type": "address"
       },

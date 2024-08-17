@@ -7,6 +7,7 @@ import Dock from "@/components/Dock";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Toaster } from "@/components/ui/toaster";
 import Loader from "@/components/Loader";
+import HelpButton from "@/components/HelpButton";
 
 import { cn } from "@/lib/utils";
 
@@ -40,6 +41,7 @@ export default function RootLayout({
             {children}
             <Toaster />
             <Loader />
+            <HelpButton />
           </ThemeProvider>
         </ContextProvider>
       </body>

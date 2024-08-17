@@ -1,10 +1,14 @@
 "use client";
 
 import { useFieldArray, useForm } from "react-hook-form";
-
 import { Minus, Plus } from "lucide-react";
+
 import useModal from "@/hooks/useModal";
+import useLoader from "@/hooks/useLoader";
+import useCustomContract from "@/hooks/useContract";
 import { Campaign } from "@/lib/types";
+import { formatEther } from "@/lib/utils";
+import { TOKEN_SYMBOL } from "@/lib/constants";
 import {
   Dialog,
   DialogContent,
@@ -15,10 +19,6 @@ import {
 import { Button } from "../ui/button";
 import TextField from "../TextField";
 import { useToast } from "../ui/use-toast";
-import useLoader from "@/hooks/useLoader";
-import useCustomContract from "@/hooks/useContract";
-import { formatEther } from "@/lib/utils";
-import { TOKEN_SYMBOL } from "@/lib/constants";
 
 type Props = {
   campaign: Campaign;
