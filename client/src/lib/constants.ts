@@ -140,6 +140,11 @@ export const FUTURE_SCOPE = [
     description:
       "As of now, the application is only supported on the EVM compatible blockchain. To make the application more accessible, it can be deployed on multiple blockchains like solana, cosmos etc.",
   },
+  {
+    title: "Adding indexers",
+    description:
+      "Adding indexer for faster access of campaigns and related data instead of directly fetching data from the blockchain.",
+  },
 ];
 
 export const chainIdToNetwork: {
