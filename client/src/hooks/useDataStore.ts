@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 import { Campaign } from "@/lib/types";
-import { DonationType } from "@/app/my-donations/page";
+import { DonationType } from "@/app/(app)/my-donations/page";
 
 interface DataStore {
   campaigns: Campaign[];
