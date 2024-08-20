@@ -2,16 +2,14 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
 import ContextProvider from "@/components/Provider";
-import Navbar from "@/components/Navbar";
-import Dock from "@/components/Dock";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Toaster } from "@/components/ui/toaster";
 import Loader from "@/components/Loader";
-import HelpButton from "@/components/HelpButton";
 
 import { cn } from "@/lib/utils";
 
 import "./globals.css";
+import SharedLayout from "@/components/SharedLayout";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -36,12 +34,10 @@ export default function RootLayout({
       >
         <ContextProvider>
           <ThemeProvider defaultTheme="dark">
-            <Navbar />
-            <Dock />
+            <SharedLayout />
             {children}
             <Toaster />
             <Loader />
-            <HelpButton />
           </ThemeProvider>
         </ContextProvider>
       </body>

@@ -21,7 +21,7 @@ import { Button } from "./ui/button";
 import TooltipComponent from "./TooltipComponent";
 import ProposeTransaction from "./modals/ProposeTransaction";
 import ViewVotes from "./modals/ViewVotes";
-import { VoterType } from "@/app/campaigns-to-vote/[id]/page";
+import { VoterType } from "@/app/(app)/campaigns-to-vote/[id]/page";
 import useModal from "@/hooks/useModal";
 import useCustomContract from "@/hooks/useContract";
 

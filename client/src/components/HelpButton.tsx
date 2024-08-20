@@ -35,7 +35,7 @@ const HelpButton = () => {
       </div>
       {/* connected network button */}
       <div className="fixed bottom-8 right-4 z-10">
-        <Badge variant="outline" className="py-2 px-4 dark">
+        <Badge variant="outline" className="py-2 px-4 dark backdrop-blur-lg">
           <span
             className={cn(
               "h-2 w-2 bg-green-500 rounded-full inline-block mr-2",

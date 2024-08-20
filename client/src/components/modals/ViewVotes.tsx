@@ -12,7 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { VoterType } from "@/app/campaigns-to-vote/[id]/page";
+import { VoterType } from "@/app/(app)/campaigns-to-vote/[id]/page";
 
 type Props = {
   campaignId: string;

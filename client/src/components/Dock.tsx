@@ -12,7 +12,7 @@ const Dock = () => {
   const pathName = usePathname();
   return (
     <div className="fixed dark z-10 left-1/2 bottom-8 transform -translate-x-1/2 flex justify-center items-center">
-      <div className="bg-dockBlack/50 backdrop-blur-lg gap-4 px-4 py-3 rounded-3xl flex justify-evenly">
+      <div className="hidden md:flex bg-dockBlack/50 backdrop-blur-lg gap-4 px-4 py-3 rounded-3xl  justify-evenly">
         {DOCK_ITEMS.map((item, idx) => (
           <TooltipComponent title={item.title} key={item.title + idx}>
             <Link
