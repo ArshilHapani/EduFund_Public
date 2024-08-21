@@ -1,3 +1,5 @@
+import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
+
 import {
   CampaignCreated as CampaignCreatedEvent,
   CampaignMadeInactive as CampaignMadeInactiveEvent,
@@ -7,103 +9,107 @@ import {
   TransactionProposed as TransactionProposedEvent,
 } from "../generated/EduFund/EduFund";
 import {
-  CampaignCreated,
-  CampaignMadeInactive,
-  CampaignVoted,
-  DonationReceived,
-  TransactionExecuted,
-  TransactionProposed,
+  Campaign,
+  CampaignVoter,
+  CampaignVotes,
+  Donation,
+  Transaction,
 } from "../generated/schema";
 
 export function handleCampaignCreated(event: CampaignCreatedEvent): void {
-  let entity = new CampaignCreated(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  );
-  entity.owner = event.params.owner;
-  entity.campaignId = event.params.campaignId;
-  entity.title = event.params.title;
-  entity.description = event.params.description;
-  entity.goal = event.params.goal;
-  entity.deadline = event.params.deadline;
+  let campaignRecord = new Campaign(event.params.campaignId.toString());
 
-  entity.blockNumber = event.block.number;
-  entity.blockTimestamp = event.block.timestamp;
-  entity.transactionHash = event.transaction.hash;
-
-  entity.save();
-}
-
-export function handleCampaignMadeInactive(
-  event: CampaignMadeInactiveEvent
-): void {
-  let entity = new CampaignMadeInactive(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  );
-  entity.campaignId = event.params.campaignId;
-
-  entity.blockNumber = event.block.number;
-  entity.blockTimestamp = event.block.timestamp;
-  entity.transactionHash = event.transaction.hash;
-
-  entity.save();
+  campaignRecord.owner = Bytes.fromHexString(event.params.owner.toHexString());
+  campaignRecord.title = event.params.title;
+  campaignRecord.description = event.params.description;
+  campaignRecord.goal = event.params.goal;
+  campaignRecord.balance = BigInt.fromString("0");
+  campaignRecord.deadline = event.params.deadline;
+  campaignRecord.active = true;
+  campaignRecord.isTransactionProposed = false;
+  campaignRecord.isTransactionExecuted = false;
+  campaignRecord.save();
 }
 
 export function handleCampaignVoted(event: CampaignVotedEvent): void {
-  let entity = new CampaignVoted(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
+  let campaignVoter = new CampaignVoter(
+    event.transaction.hash
+      .concatI32(event.logIndex.toI32())
+      .concat(event.transaction.from)
   );
-  entity.voter = event.params.voter;
-  entity.campaignId = event.params.campaignId;
-  entity.transactionIndex = event.params.transactionIndex;
-  entity.vote = event.params.vote;
 
-  entity.blockNumber = event.block.number;
-  entity.blockTimestamp = event.block.timestamp;
-  entity.transactionHash = event.transaction.hash;
+  campaignVoter.campaignId = event.params.campaignId;
+  campaignVoter.voter = event.transaction.from;
+  campaignVoter.vote = event.params.vote;
 
-  entity.save();
+  let campaignVotes = CampaignVotes.load(event.params.campaignId.toString());
+
+  if (!campaignVotes) {
+    campaignVotes = new CampaignVotes(event.params.campaignId.toString());
+    if (event.params.vote) {
+      campaignVotes.yesVotes = BigInt.fromI32(1);
+      campaignVotes.noVotes = BigInt.fromI32(0);
+    } else {
+      campaignVotes.noVotes = BigInt.fromI32(1);
+      campaignVotes.yesVotes = BigInt.fromI32(0);
+    }
+  } else {
+    if (event.params.vote) {
+      campaignVotes.yesVotes = campaignVotes.yesVotes.plus(BigInt.fromI32(1));
+    } else {
+      campaignVotes.noVotes = campaignVotes.noVotes.plus(BigInt.fromI32(1));
+    }
+  }
+
+  campaignVotes.save();
 }
 
 export function handleDonationReceived(event: DonationReceivedEvent): void {
-  let entity = new DonationReceived(
+  let entity = new Donation(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   );
-  entity.donor = event.params.donor;
-  entity.amount = event.params.amount;
+  let campaignRecord = Campaign.load(event.params.campaignId.toString());
+  if (!campaignRecord) return;
+
+  campaignRecord.balance = campaignRecord.balance.plus(event.params.amount);
+  if (campaignRecord.balance >= campaignRecord.goal) {
+    campaignRecord.active = false;
+  }
+
+  entity.donor = Bytes.fromHexString(event.params.donor.toHexString());
   entity.campaignId = event.params.campaignId;
+  entity.amount = event.params.amount;
 
   entity.blockNumber = event.block.number;
   entity.blockTimestamp = event.block.timestamp;
   entity.transactionHash = event.transaction.hash;
 
   entity.save();
+  campaignRecord.save();
 }
 
 export function handleTransactionExecuted(
   event: TransactionExecutedEvent
 ): void {
-  let entity = new TransactionExecuted(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  );
-  entity.campaignId = event.params.campaignId;
-  entity.transactionIndex = event.params.transactionIndex;
-
-  entity.blockNumber = event.block.number;
-  entity.blockTimestamp = event.block.timestamp;
-  entity.transactionHash = event.transaction.hash;
-
-  entity.save();
+  let campaignRecord = Campaign.load(event.params.campaignId.toString());
+  if (!campaignRecord) return;
+  campaignRecord.isTransactionExecuted = true;
 }
 
 export function handleTransactionProposed(
   event: TransactionProposedEvent
 ): void {
-  let entity = new TransactionProposed(
+  let entity = new Transaction(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   );
-  entity.owner = event.params.owner;
+  let campaignRecord = Campaign.load(event.params.campaignId.toString());
+  if (!campaignRecord) return;
+  campaignRecord.isTransactionProposed = true;
+
   entity.campaignId = event.params.campaignId;
-  entity.recipients = event.params.recipients;
+  entity.recipients = event.params.recipients.map<Bytes>((r: Address) =>
+    Bytes.fromHexString(r.toHexString())
+  );
   entity.amounts = event.params.amounts;
   entity.descriptions = event.params.descriptions;
 
@@ -112,4 +118,13 @@ export function handleTransactionProposed(
   entity.transactionHash = event.transaction.hash;
 
   entity.save();
+  campaignRecord.save();
+}
+export function handleCampaignMadeInactive(
+  event: CampaignMadeInactiveEvent
+): void {
+  let campaignRecord = Campaign.load(event.params.campaignId.toString());
+  if (!campaignRecord) return;
+  campaignRecord.active = false;
+  campaignRecord.save();
 }
