@@ -1,0 +1,62 @@
+type CampaignCreated @entity(immutable: true) {
+  id: Bytes!
+  owner: Bytes! # address
+  campaignId: BigInt! # uint256
+  title: String! # string
+  description: String! # string
+  goal: BigInt! # uint256
+  deadline: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type CampaignMadeInactive @entity(immutable: true) {
+  id: Bytes!
+  campaignId: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type CampaignVoted @entity(immutable: true) {
+  id: Bytes!
+  voter: Bytes! # address
+  campaignId: BigInt! # uint256
+  transactionIndex: BigInt! # uint256
+  vote: Boolean! # bool
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type DonationReceived @entity(immutable: true) {
+  id: Bytes!
+  donor: Bytes! # address
+  amount: BigInt! # uint256
+  campaignId: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type TransactionExecuted @entity(immutable: true) {
+  id: Bytes!
+  campaignId: BigInt! # uint256
+  transactionIndex: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type TransactionProposed @entity(immutable: true) {
+  id: Bytes!
+  owner: Bytes! # address
+  campaignId: BigInt! # uint256
+  recipients: [Bytes!]! # address[]
+  amounts: [BigInt!]! # uint256[]
+  descriptions: [String!]! # string[]
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
