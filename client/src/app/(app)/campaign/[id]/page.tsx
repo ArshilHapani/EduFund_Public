@@ -21,6 +21,7 @@ import {
   formatEther,
   getRandomAvatar,
   getRandomImageFromUnsplash,
+  transformDataToCampaign,
 } from "@/lib/utils";
 import { TOKEN_SYMBOL } from "@/lib/constants";
 import EmptyState from "@/components/EmptyState";
@@ -44,6 +45,7 @@ const CampaignDetail = ({ params: { id } }: Props) => {
     owner: "",
     title: "",
   });
+  const [numberOfCampaign, setNumberOfCampaign] = useState(0);
   const [randomImageUrl, setRandomImageUrl] = useState({
     imageUrl: "",
     avatarUrl: "",
@@ -67,7 +69,13 @@ const CampaignDetail = ({ params: { id } }: Props) => {
       if (!id || !signer || !eduFund) return;
       const campaign = await eduFund.getCampaignById(id);
       const donators = await eduFund.getDonationsByCampaignId(id);
+      const allCampaigns = transformDataToCampaign(
+        await eduFund.getCampaigns()
+      );
+      const numberOfCampaigns =
+        allCampaigns.filter((c) => c.owner === address).length ?? 0;
 
+      setNumberOfCampaign(numberOfCampaigns);
       setDonators(donators);
       setCampaign(campaign);
     })();
@@ -166,9 +174,9 @@ const CampaignDetail = ({ params: { id } }: Props) => {
                 <h4 className="font-epilogue font-semibold text-[14px] text-white break-all">
                   {campaign.owner}
                 </h4>
-                {/* <p className="mt-[4px] font-epilogue font-normal text-[12px] text-[#808191]">
-                  10 Campaigns
-                </p> */}
+                <p className="mt-[4px] font-epilogue font-normal text-[12px] text-[#808191]">
+                  {numberOfCampaign} Campaigns
+                </p>
               </div>
             </div>
           </div>
@@ -177,7 +185,7 @@ const CampaignDetail = ({ params: { id } }: Props) => {
             <h4 className="font-epilogue font-semibold text-[18px] text-white uppercase">
               Story
             </h4>
-            <div className="mt-[20px] max-w-[800px] overflow-auto">
+            <div className="mt-[20px] overflow-auto">
               <div>
                 <RenderMD
                   className="font-epilogue font-normal text-[16px] leading-[26px] text-justify text-[#808191]"
