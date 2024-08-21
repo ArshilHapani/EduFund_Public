@@ -222,8 +222,9 @@ const CampaignDetail = ({ params: { id } }: Props) => {
             </div>
           </div>
         </div>
+        {/* form */}
         {renderDonationSectionCondition && (
-          <div className="flex-1">
+          <div className="flex-1 sticky top-4">
             <h4 className="font-epilogue font-semibold text-[18px] text-white uppercase">
               Fund
             </h4>
