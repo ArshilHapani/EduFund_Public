@@ -1,0 +1,41 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: EduFund
+    network: sepolia
+    source:
+      address: "0x0Cc10777362C3471801340c987543a39539D378f"
+      abi: EduFund
+      startBlock: 6511141
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - CampaignCreated
+        - CampaignMadeInactive
+        - CampaignVoted
+        - DonationReceived
+        - TransactionExecuted
+        - TransactionProposed
+      abis:
+        - name: EduFund
+          file: ./abis/EduFund.json
+      eventHandlers:
+        - event: CampaignCreated(indexed address,indexed uint256,string,string,uint256,uint256)
+          handler: handleCampaignCreated
+        - event: CampaignMadeInactive(indexed uint256)
+          handler: handleCampaignMadeInactive
+        - event: CampaignVoted(indexed address,indexed uint256,uint256,bool)
+          handler: handleCampaignVoted
+        - event: DonationReceived(indexed address,uint256,uint256)
+          handler: handleDonationReceived
+        - event: TransactionExecuted(indexed uint256,uint256)
+          handler: handleTransactionExecuted
+        - event: TransactionProposed(indexed address,indexed uint256,address[],uint256[],string[])
+          handler: handleTransactionProposed
+      file: ./src/edu-fund.ts

@@ -16,7 +16,7 @@ import { TOKEN_SYMBOL } from "@/lib/constants";
 interface FormSchema {
   title: string;
   description: string;
-  goal: number;
+  goal: string;
   deadline: string;
 }
 
@@ -41,7 +41,7 @@ const AddCampaign = () => {
   const router = useRouter();
 
   function onSubmit({ deadline, description, goal, title }: FormSchema) {
-    if (goal <= 0) {
+    if (Number(goal) <= 0 || goal === "") {
       toast({
         title: "Error",
         description: "Goal should be greater than 0",
@@ -60,7 +60,7 @@ const AddCampaign = () => {
     setLoading(true, "Creating campaign...");
     const deadlineTimestamp = new Date(deadline).getTime() / 1000;
     eduFundClient
-      .createCampaign(title, description, goal, deadlineTimestamp)
+      .createCampaign(title, description, Number(goal), deadlineTimestamp)
       .then(() => {
         toast({
           title: "Campaign created",
@@ -111,7 +111,7 @@ const AddCampaign = () => {
           <TextField<FormSchema>
             label={`Goal (in ${TOKEN_SYMBOL} token)`}
             placeholder={`100 ${TOKEN_SYMBOL}`}
-            type="number"
+            type="text"
             name="goal"
             register={register}
             required

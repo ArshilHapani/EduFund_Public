@@ -11,6 +11,7 @@ import { SyntheticEvent, useEffect, useMemo, useState } from "react";
 import CounterBox from "@/components/CounterBox";
 import CustomButton from "@/components/CustomButton";
 import RenderMD from "@/components/RenderMD";
+import EmptyState from "@/components/EmptyState";
 import { useToast } from "@/components/ui/use-toast";
 import useCustomContract from "@/hooks/useContract";
 import useLoader from "@/hooks/useLoader";
@@ -21,9 +22,9 @@ import {
   formatEther,
   getRandomAvatar,
   getRandomImageFromUnsplash,
+  transformDataToCampaign,
 } from "@/lib/utils";
 import { TOKEN_SYMBOL } from "@/lib/constants";
-import EmptyState from "@/components/EmptyState";
 
 type Props = {
   params: {
@@ -44,6 +45,7 @@ const CampaignDetail = ({ params: { id } }: Props) => {
     owner: "",
     title: "",
   });
+  const [numberOfCampaign, setNumberOfCampaign] = useState(0);
   const [randomImageUrl, setRandomImageUrl] = useState({
     imageUrl: "",
     avatarUrl: "",
@@ -67,7 +69,13 @@ const CampaignDetail = ({ params: { id } }: Props) => {
       if (!id || !signer || !eduFund) return;
       const campaign = await eduFund.getCampaignById(id);
       const donators = await eduFund.getDonationsByCampaignId(id);
+      const allCampaigns = transformDataToCampaign(
+        await eduFund.getCampaigns()
+      );
+      const numberOfCampaigns =
+        allCampaigns.filter((c) => c.owner === address).length ?? 0;
 
+      setNumberOfCampaign(numberOfCampaigns);
       setDonators(donators);
       setCampaign(campaign);
     })();
@@ -85,7 +93,7 @@ const CampaignDetail = ({ params: { id } }: Props) => {
   }, []);
   async function handleDonation(e: SyntheticEvent) {
     e.preventDefault();
-    if (amount === "") {
+    if (amount === "" || Number(amount) <= 0 || isNaN(Number(amount))) {
       toast({
         title: "Amount cannot be empty",
         variant: "destructive",
@@ -166,9 +174,9 @@ const CampaignDetail = ({ params: { id } }: Props) => {
                 <h4 className="font-epilogue font-semibold text-[14px] text-white break-all">
                   {campaign.owner}
                 </h4>
-                {/* <p className="mt-[4px] font-epilogue font-normal text-[12px] text-[#808191]">
-                  10 Campaigns
-                </p> */}
+                <p className="mt-[4px] font-epilogue font-normal text-[12px] text-[#808191]">
+                  {numberOfCampaign} Campaigns
+                </p>
               </div>
             </div>
           </div>
@@ -177,7 +185,7 @@ const CampaignDetail = ({ params: { id } }: Props) => {
             <h4 className="font-epilogue font-semibold text-[18px] text-white uppercase">
               Story
             </h4>
-            <div className="mt-[20px] max-w-[800px] overflow-auto">
+            <div className="mt-[20px] overflow-auto">
               <div>
                 <RenderMD
                   className="font-epilogue font-normal text-[16px] leading-[26px] text-justify text-[#808191]"
@@ -214,8 +222,9 @@ const CampaignDetail = ({ params: { id } }: Props) => {
             </div>
           </div>
         </div>
+        {/* form */}
         {renderDonationSectionCondition && (
-          <div className="flex-1">
+          <div className="flex-1 sticky top-4">
             <h4 className="font-epilogue font-semibold text-[18px] text-white uppercase">
               Fund
             </h4>
@@ -228,10 +237,8 @@ const CampaignDetail = ({ params: { id } }: Props) => {
               </p>
               <div className="mt-[30px]">
                 <input
-                  type="number"
+                  type="text"
                   placeholder={`${TOKEN_SYMBOL} 0.1`}
-                  min={0.000001}
-                  max={campaign.goal.toString()}
                   className="w-full py-[10px] sm:px-[20px] px-[15px] outline-none border-[1px] border-[#3a3a43] bg-transparent font-epilogue text-white text-[18px] leading-[30px] placeholder:text-[#4b5264] rounded-[10px]"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}

@@ -1,0 +1,48 @@
+type Campaign @entity(immutable: false) {
+  id: ID!
+  owner: Bytes!
+  title: String!
+  description: String!
+  goal: BigInt!
+  balance: BigInt!
+  deadline: BigInt!
+  active: Boolean!
+  isTransactionProposed: Boolean!
+  isTransactionExecuted: Boolean!
+}
+
+type Donation @entity(immutable: true) {
+  id: Bytes!
+  donor: Bytes!
+  amount: BigInt!
+  campaignId: BigInt!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type CampaignVoter @entity(immutable: true) {
+  id: Bytes!
+  voter: Bytes!
+  vote: Boolean!
+  campaignId: BigInt!
+}
+
+type CampaignVotes @entity(immutable: true) {
+  id: ID!
+  campaignId: BigInt!
+  yesVotes: BigInt!
+  noVotes: BigInt!
+}
+
+type Transaction @entity(immutable: true) {
+  id: Bytes!
+  campaignId: BigInt!
+  recipients: [Bytes!]!
+  amounts: [BigInt!]!
+  descriptions: [String!]!
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}

@@ -117,7 +117,7 @@ export const AVATARS = [
   thumbs,
 ];
 
-export const TOKEN_SYMBOL = "ETH";
+export const TOKEN_SYMBOL = "EDU";
 
 export const FUTURE_SCOPE = [
   {

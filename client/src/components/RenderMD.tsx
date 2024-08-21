@@ -12,7 +12,7 @@ type Props = {
 
 const RenderMD = ({ markdown, className }: Props) => {
   return (
-    <div className={cn("prose mx-auto md:prose-lg", className)}>
+    <div className={cn("prose-invert dark mx-auto md:prose-lg", className)}>
       <Markdown remarkPlugins={[remarkGfm]}>{markdown}</Markdown>
     </div>
   );
