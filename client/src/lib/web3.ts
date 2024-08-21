@@ -13,7 +13,6 @@ export default class EduFundClient {
         : chainId === 11155111
         ? addresses.sepolia.EduFund
         : addresses.localhost.EduFund;
-    console.log({ chainId });
     this.contract = new ethers.Contract(address, abi.EduFund, signer);
   }
   getContract(): Contract {

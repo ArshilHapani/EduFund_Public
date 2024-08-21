@@ -93,7 +93,7 @@ const CampaignDetail = ({ params: { id } }: Props) => {
   }, []);
   async function handleDonation(e: SyntheticEvent) {
     e.preventDefault();
-    if (amount === "") {
+    if (amount === "" || Number(amount) <= 0 || isNaN(Number(amount))) {
       toast({
         title: "Amount cannot be empty",
         variant: "destructive",
@@ -237,7 +237,7 @@ const CampaignDetail = ({ params: { id } }: Props) => {
               </p>
               <div className="mt-[30px]">
                 <input
-                  type="number"
+                  type="text"
                   placeholder={`${TOKEN_SYMBOL} 0.1`}
                   className="w-full py-[10px] sm:px-[20px] px-[15px] outline-none border-[1px] border-[#3a3a43] bg-transparent font-epilogue text-white text-[18px] leading-[30px] placeholder:text-[#4b5264] rounded-[10px]"
                   value={amount}
