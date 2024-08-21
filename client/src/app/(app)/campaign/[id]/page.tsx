@@ -11,6 +11,7 @@ import { SyntheticEvent, useEffect, useMemo, useState } from "react";
 import CounterBox from "@/components/CounterBox";
 import CustomButton from "@/components/CustomButton";
 import RenderMD from "@/components/RenderMD";
+import EmptyState from "@/components/EmptyState";
 import { useToast } from "@/components/ui/use-toast";
 import useCustomContract from "@/hooks/useContract";
 import useLoader from "@/hooks/useLoader";
@@ -24,7 +25,6 @@ import {
   transformDataToCampaign,
 } from "@/lib/utils";
 import { TOKEN_SYMBOL } from "@/lib/constants";
-import EmptyState from "@/components/EmptyState";
 
 type Props = {
   params: {
@@ -238,8 +238,6 @@ const CampaignDetail = ({ params: { id } }: Props) => {
                 <input
                   type="number"
                   placeholder={`${TOKEN_SYMBOL} 0.1`}
-                  min={0.000001}
-                  max={campaign.goal.toString()}
                   className="w-full py-[10px] sm:px-[20px] px-[15px] outline-none border-[1px] border-[#3a3a43] bg-transparent font-epilogue text-white text-[18px] leading-[30px] placeholder:text-[#4b5264] rounded-[10px]"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
