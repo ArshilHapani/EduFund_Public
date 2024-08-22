@@ -65,6 +65,12 @@ export default function Footer() {
             </svg>
           </a> */}
           <a
+            href="/manual"
+            className=" px-2 pt-1 hover:underline text-indigo-400"
+          >
+            Learn More
+          </a>
+          <a
             className="ml-3"
             href="https://github.com/thevishvammoliya/edufund"
           >
