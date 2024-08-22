@@ -14,7 +14,10 @@ export default function Content() {
           </h1>
           <br></br>
           <p className="mx-auto  text-xl font-normal leading-relaxed text-gray-600 lg:w-2/3">
-            Unlocking Opportunities with Decentralized Crowdfunding
+            Unlocking Opportunities with Decentralized Crowdfunding{" "}
+            <a href="/manual" className="hover:underline text-indigo-400">
+              Learn More
+            </a>
           </p>
         </div>
       </div>

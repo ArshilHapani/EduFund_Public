@@ -56,11 +56,11 @@ export default function Header() {
                 </div>
               </a>
             </button>
-            <a href="/manual">
+            {/* <a href="/manual">
               <button className="px-8 py-2  text-white rounded-lg font-bold transform hover:-translate-y-1 transition duration-400">
                 Manual
               </button>
-            </a>
+            </a> */}
           </nav>
         </div>
       </div>
