@@ -28,7 +28,7 @@ const HelpButton = () => {
               variant="secondary"
               className="dark rounded-full"
             >
-              <CircleHelp className="h-12 w-12" />
+              <CircleHelp className="h-12 w-12 stroke-neutral-300" />
             </Button>
           </Link>
         </TooltipComponent>

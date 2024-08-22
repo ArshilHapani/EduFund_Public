@@ -64,12 +64,12 @@ export default function Footer() {
               <circle cx="4" cy="4" r="2" stroke="none"></circle>
             </svg>
           </a> */}
-          <a
+          {/* <a
             href="/manual"
             className=" px-2 pt-1 hover:underline text-indigo-400"
           >
             Learn More
-          </a>
+          </a> */}
           <a
             className="ml-3"
             href="https://github.com/thevishvammoliya/edufund"

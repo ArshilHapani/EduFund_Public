@@ -1,6 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
+import Link from "next/link";
+
 export default function Content() {
   return (
     <section className="text-black body-font lg:pt-20">
@@ -15,9 +17,9 @@ export default function Content() {
           <br></br>
           <p className="mx-auto  text-xl font-normal leading-relaxed text-gray-600 lg:w-2/3">
             Unlocking Opportunities with Decentralized Crowdfunding{" "}
-            <a href="/manual" className="hover:underline text-indigo-400">
+            <Link href="/manual" className="hover:underline text-indigo-400">
               Learn More
-            </a>
+            </Link>
           </p>
         </div>
       </div>
