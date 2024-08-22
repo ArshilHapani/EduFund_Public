@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
@@ -14,7 +15,8 @@ export default function Header() {
           className="flex title-font font-medium text-white mb-4 md:mb-0 pr-4"
           href="/"
         >
-          <span className="ml-3 text-3xl">EDUFund</span>
+          <img src="/EduFund-Logo-Transparent.png" className="h-28"></img>
+          {/* <span className="ml-3 text-3xl">EDUFund</span> */}
         </a>
         <button
           className="text-white cursor-pointer text-xl leading-none py-1 border border-solid border-transparent rounded bg-transparent block md:hidden outline-none focus:outline-none ml-auto pb-3"
@@ -46,16 +48,19 @@ export default function Header() {
           id="example-navbar-danger"
         >
           <nav className="md:ml-auto flex flex-wrap items-center text-base justify-center font-semibold pl-7">
-            <Button variant="link">
-              <Link className="mr-6 hover:text-white" href="/">
-                App
-              </Link>
-            </Button>
-            <Button variant="link">
-              <Link className="mr-6 hover:text-white" href="/manual">
+            <button className="p-[3px] relative">
+              <a href="/">
+                <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg" />
+                <div className="px-8 py-2  bg-black rounded-[6px]  relative group transition duration-200 text-white hover:bg-transparent">
+                  Launch App
+                </div>
+              </a>
+            </button>
+            <a href="/manual">
+              <button className="px-8 py-2  text-white rounded-lg font-bold transform hover:-translate-y-1 transition duration-400">
                 Manual
-              </Link>
-            </Button>
+              </button>
+            </a>
           </nav>
         </div>
       </div>

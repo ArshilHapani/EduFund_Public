@@ -7,24 +7,24 @@ export default function Content() {
       <div className="container px-5 pt-32 mx-auto lg:px-4 lg:py-4">
         <div className="flex flex-col w-full mb-2 text-left md:text-center ">
           <h1 className="mb-2 text-6xl font-bold tracking-tighter text-white lg:text-8xl md:text-7xl">
-            <span>EDU Fund promotes </span>
-            <br className="hidden lg:block"></br>
-            Fairness
+            <span>
+              EduFund: Fueling Dreams, <br />
+              One Block at a Time
+            </span>
           </h1>
           <br></br>
           <p className="mx-auto  text-xl font-normal leading-relaxed text-gray-600 lg:w-2/3">
-            EDUFund is a platform that helps students to raise funds for their
-            education.
+            Unlocking Opportunities with Decentralized Crowdfunding
           </p>
         </div>
       </div>
-      <div className="container flex flex-col items-center justify-center py-8 mx-auto rounded-lg md:p-1 p-3">
-        <img
-          className="object-cover object-center w-full mb-10 rounded-lg shadow-md"
-          alt="hero"
-          src="https://images.unsplash.com/photo-1724010930544-59b11726a226?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzfHx8ZW58MHx8fHx8"
-        ></img>
-      </div>
+      {/* <div className="container flex flex-col items-center justify-center py-8 mx-auto rounded-3xl md:p-1 p-3"> */}
+      <img
+        className="object-cover object-center w-full mb-10 rounded-3xl shadow-md"
+        alt="hero"
+        src="/assets/Hero.jpg"
+      ></img>
+      {/* </div> */}
       <section className="text-gray-600 body-font">
         <div className="container px-5 mx-auto">
           <div className="text-center mb-20">
@@ -32,7 +32,7 @@ export default function Content() {
               Our Team
             </h2>
             <p className="text-base leading-relaxed xl:w-2/4 lg:w-3/4 mx-auto text-gray-500s">
-              Here is our company
+              {/* Here is our company */}
             </p>
             <div className="flex mt-6 justify-center">
               <div className="w-16 h-1 rounded-full bg-white inline-flex"></div>
@@ -41,14 +41,16 @@ export default function Content() {
               <div className="flex flex-wrap -m-4 justify-center">
                 <div className="p-4 lg:w-1/4 md:w-1/2">
                   <div className="h-full flex flex-col items-center text-center">
-                    <img
-                      alt="team"
-                      className="rounded-full w-28 h-28 object-cover object-center mb-4"
-                      src="https://avatars.githubusercontent.com/u/108511809?v=4"
-                    ></img>
+                    <a href="https://github.com/ArshilHapani">
+                      <img
+                        alt="team"
+                        className="rounded-full w-28 h-28 object-cover object-center mb-4"
+                        src="https://avatars.githubusercontent.com/u/108511809?v=4"
+                      />
+                    </a>
                     <div className="w-full">
                       <h2 className="title-font font-medium text-lg text-white">
-                        Arshil
+                        <a href="https://github.com/ArshilHapani">Arshil</a>
                       </h2>
                       <h3 className="text-gray-500 mb-3">Developer</h3>
                       <p className="mb-4">
@@ -98,19 +100,21 @@ export default function Content() {
                 </div>
                 <div className="p-4 lg:w-1/4 md:w-1/2">
                   <div className="h-full flex flex-col items-center text-center">
-                    <img
-                      alt="team"
-                      className="rounded-full w-28 h-28 object-cover object-center mb-4"
-                      src="https://avatars.githubusercontent.com/u/96417040?v=4"
-                    ></img>
+                    <a href="https://bento.me/vishvammoliya">
+                      <img
+                        alt="team"
+                        className="rounded-full w-28 h-28 object-cover object-center mb-4"
+                        src="https://avatars.githubusercontent.com/u/96417040?v=4"
+                      />
+                    </a>
                     <div className="w-full">
                       <h2 className="title-font font-medium text-lg text-white">
-                        Vishvam
+                        <a href="https://bento.me/vishvammoliya">Vishvam</a>
                       </h2>
                       <h3 className="text-gray-500 mb-3">Developer</h3>
                       <p className="mb-4">
-                        Vishvam is a full-stack developer with a passion for
-                        creating amazing websites. TODO (change it)
+                        Vishvam is a tech enthusiast, who loves to code and
+                        build cool stuff.
                       </p>
                       <span className="inline-flex">
                         <a className="text-gray-500">
