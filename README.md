@@ -20,3 +20,6 @@ For local development, you can follow the instructions below.
 Client: [EDUFund Frontend](./client/README.md)
 
 Contracts Backend: [EDUFund Contracts Backend](./contracts_backend/README.md)
+
+Live Deployment: [EduFund](https://edu-fund-public.vercel.app/home)
+Demo Video: [YouTube](https://youtu.be/XNtOqjahL2Y)
