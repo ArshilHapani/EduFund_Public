@@ -23,22 +23,17 @@ export default function Content() {
           </p>
         </div>
       </div>
-      {/* <div className="container flex flex-col items-center justify-center py-8 mx-auto rounded-3xl md:p-1 p-3"> */}
       <img
         className="object-cover object-center w-full mb-10 rounded-3xl shadow-md"
         alt="hero"
         src="/assets/Hero.jpg"
-      ></img>
-      {/* </div> */}
+      />
       <section className="text-gray-600 body-font">
         <div className="container px-5 mx-auto">
           <div className="text-center mb-20">
             <h2 className="sm:text-5xl font-medium title-font text-white mb-4">
               Our Team
             </h2>
-            <p className="text-base leading-relaxed xl:w-2/4 lg:w-3/4 mx-auto text-gray-500s">
-              {/* Here is our company */}
-            </p>
             <div className="flex mt-6 justify-center">
               <div className="w-16 h-1 rounded-full bg-white inline-flex"></div>
             </div>
