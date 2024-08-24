@@ -139,7 +139,9 @@ const CampaignVotePage = ({ params: { id } }: Props) => {
           {!alreadyVoted ? "Vote for the proposal" : "Voters"}
         </h4>
         <div>
-          {!alreadyVoted && address != campaign.owner ? (
+          {!alreadyVoted &&
+          address != campaign.owner &&
+          !campaign.isTransactionExecuted ? (
             <div className="flex items-center gap-5 mt-4">
               <Button
                 size="lg"
