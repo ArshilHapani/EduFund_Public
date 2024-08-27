@@ -15,6 +15,7 @@ import {
   formatEther,
   getRandomAvatar,
   getRandomImageFromUnsplash,
+  markdownToText,
 } from "@/lib/utils";
 import { TOKEN_SYMBOL } from "@/lib/constants";
 import { Button } from "./ui/button";
@@ -87,7 +88,7 @@ const CampaignCard = ({ campaign }: Props) => {
               {title}
             </h3>
             <p className="mt-[5px] font-epilogue font-normal text-[#808191] text-left leading-[18px] truncate">
-              {description}
+              {markdownToText(description)}
             </p>
           </div>
 

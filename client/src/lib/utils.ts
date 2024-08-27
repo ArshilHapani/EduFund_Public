@@ -116,3 +116,16 @@ export const calculateBarPercentage = (goal: number, raisedAmount: number) => {
   const percentage = Math.round((raisedAmount * 100) / goal);
   return percentage;
 };
+
+export function markdownToText(md: string): string {
+  let plainText = md.replace(/[#*>\-`_]/g, "");
+  plainText = plainText.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
+  plainText = plainText.replace(/!\[.*\]\([^)]*\)/g, "");
+  plainText = plainText.replace(/\*\*(.*?)\*\*/g, "$1");
+  plainText = plainText.replace(/\*(.*?)\*/g, "$1");
+  plainText = plainText.replace(/`([^`]+)`/g, "$1");
+  plainText = plainText.replace(/(\*\*\*|---)/g, "");
+  plainText = plainText.replace(/\n{2,}/g, "\n");
+
+  return plainText.trim();
+}
