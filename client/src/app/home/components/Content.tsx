@@ -2,8 +2,30 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+
+import { cn } from "@/lib/utils";
 
 export default function Content() {
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const videoElement = videoRef.current;
+
+    if (videoElement) {
+      const handleLoadedData = () => {
+        setIsVideoLoaded(true);
+      };
+
+      videoElement.addEventListener("loadeddata", handleLoadedData);
+
+      return () => {
+        videoElement.removeEventListener("loadeddata", handleLoadedData);
+      };
+    }
+  }, []);
+
   return (
     <section className="text-black body-font lg:pt-20">
       <div className="container px-5 pt-32 mx-auto lg:px-4 lg:py-4">
@@ -23,11 +45,31 @@ export default function Content() {
           </p>
         </div>
       </div>
-      <img
-        className="object-cover object-center w-full mb-10 rounded-3xl shadow-md"
+      {/* <img
+        className={cn(
+          "object-cover object-center w-full mb-10 rounded-3xl shadow-md",
+          {
+            hidden: !isVideoLoaded,
+          }
+        )}
         alt="hero"
         src="/assets/Hero.jpg"
-      />
+      /> */}
+      <video
+        ref={videoRef}
+        className={cn(
+          "object-cover object-center w-full mb-10 rounded-3xl shadow-md"
+        )}
+        muted
+        autoPlay
+        loop
+      >
+        <source
+          src="https://utfs.io/f/SBPlgACiEghflsvExjwxVdPuLDSvzY8t0wbOj1oCnmrsTRMg"
+          type="video/mp4"
+        />
+      </video>
+
       <section className="text-gray-600 body-font">
         <div className="container px-5 mx-auto">
           <div className="text-center mb-20">
